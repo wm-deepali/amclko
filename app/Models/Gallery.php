@@ -10,4 +10,22 @@ class Gallery extends Model
         'image',
         'status',
     ];
+    
+      // ✅ Auto-append this attribute
+    protected $appends = ['thumb_image'];
+
+    /**
+     * Get thumbnail image URL
+     */
+    public function getThumbImageAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+        return  str_replace(
+            'gallery/',
+            'gallery/thumb/',
+            $this->image
+        );
+    }
 }

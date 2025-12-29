@@ -9,7 +9,7 @@
 
             <div class="d-flex justify-content-between mb-3">
                 <h5>Urdu Academy</h5>
-                <a href="{{ route('urdu-academy.create') }}" class="btn btn-primary">
+                <a href="{{ route('manage-urdu-academy.create') }}" class="btn btn-primary">
                     + Add New
                 </a>
             </div>
@@ -37,7 +37,7 @@ $(function () {
     let table = $('#urduTable').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('urdu-academy.index') }}",
+        ajax: "{{ route('manage-urdu-academy.index') }}",
         columns: [
             {data:'checkbox', orderable:false, searchable:false},
             {data:'image', orderable:false, searchable:false},
@@ -56,7 +56,7 @@ $(function () {
         }).then((r)=>{
             if(r.isConfirmed){
                 $.ajax({
-                    url:`/urdu-academy/${id}`,
+                    url:`/manage-urdu-academy/${id}`,
                     type:'DELETE',
                     data:{ _token:"{{ csrf_token() }}" },
                     success:()=>table.ajax.reload()

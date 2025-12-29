@@ -29,7 +29,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Save</button>
-                    <a href="{{ route('urdu-academy.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-urdu-academy.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
 
             </form>
@@ -51,14 +51,14 @@ $('#urduForm').submit(function(e){
     fd.set('content', CKEDITOR.instances.editor.getData());
 
     $.ajax({
-        url:"{{ route('urdu-academy.store') }}",
+        url:"{{ route('manage-urdu-academy.store') }}",
         type:"POST",
         data:fd,
         processData:false,
         contentType:false,
         success:()=>{
             Swal.fire('Success','Added successfully','success')
-                .then(()=>location.href="{{ route('urdu-academy.index') }}");
+                .then(()=>location.href="{{ route('manage-urdu-academy.index') }}");
         },
         error:x=>{
             let msg='';

@@ -362,7 +362,7 @@
               </a>
               <ul class="dropdown-menu amc-dropdown">
                 <li><a href="{{ url('chairman-message') }}">Message from Chairman</a></li>
-                <li><a href="{{ url('secratry-message') }}">Message from Secretary</a></li>
+                <li><a href="{{ url('secretary-message') }}">Message from Secretary</a></li>
                 <li><a href="{{ url('about-us') }}">About Institution</a></li>
                 <li><a href="{{ url('vision-mission') }}">Vision & Mission</a></li>
                 <li><a href="{{ asset('images/aims.jpg') }}" target="_blank">Aims & Objectives</a></li>
@@ -375,7 +375,7 @@
                 Admission & Courses <span class="amc-caret"></span>
               </a>
               <ul class="dropdown-menu amc-dropdown">
-                <li><a href="{{ url('applicationform') }}">Admission Form</a></li>
+                <li><a href="{{ url('application-form') }}">Admission Form</a></li>
                 <li><a href="{{ url('courses') }}">Our Courses</a></li>
               </ul>
             </li>
@@ -428,6 +428,3 @@
     });
   </script>
 
-</body>
-
-</html>

@@ -41,7 +41,7 @@ class UrduAcademyController extends Controller
                         : '<span class="badge bg-danger">Blocked</span>'
                 )
                 ->addColumn('action', fn($r) =>
-                    '<a href="'.route('urdu-academy.edit',$r).'" class="btn btn-sm btn-info">Edit</a>
+                    '<a href="'.route('manage-urdu-academy.edit',$r).'" class="btn btn-sm btn-info">Edit</a>
                      <button class="btn btn-sm btn-danger delete" data-id="'.$r->id.'">Delete</button>'
                 )
                 ->rawColumns(['checkbox','image','status','action'])

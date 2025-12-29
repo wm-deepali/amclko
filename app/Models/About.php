@@ -12,4 +12,22 @@ class About extends Model
         'image',
         'status',
     ];
+
+    // ✅ Auto-append this attribute
+    protected $appends = ['thumb_image'];
+
+    /**
+     * Get thumbnail image URL
+     */
+    public function getThumbImageAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+        return str_replace(
+            'abouts/',
+            'abouts/thumb/',
+            $this->image
+        );
+    }
 }

@@ -51,7 +51,7 @@
 
     {{-- ================= COURSES PAGE ================= --}}
     <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('courses.*') ? 'active' : '' }}" href="{{ route('courses.index') }}">
+        <a class="nav-link {{ request()->routeIs('manage-courses.*') ? 'active' : '' }}" href="{{ route('manage-courses.index') }}">
             <svg class="nav-icon">
                 <use xlink:href="{{ asset('icons/coreui.svg#cil-library') }}"></use>
             </svg>
@@ -93,7 +93,7 @@
             <li class="nav-item"><a class="nav-link" href="{{ route('recognizations.index') }}">Govt. Recognition</a>
             </li>
             <li class="nav-item"><a class="nav-link" href="{{ route('skill-dev.index') }}">Skill Development</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('urdu-academy.index') }}">Urdu Academy</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('manage-urdu-academy.index') }}">Urdu Academy</a></li>
         </ul>
     </li>
 

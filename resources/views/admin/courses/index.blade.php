@@ -14,7 +14,7 @@
                         <option value="block">Blocked</option>
                     </select>
 
-                    <a href="{{ route('courses.create') }}" class="btn btn-primary ms-auto">
+                    <a href="{{ route('manage-courses.create') }}" class="btn btn-primary ms-auto">
                         + Add Course
                     </a>
                 </div>
@@ -46,7 +46,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route('courses.index') }}",
+                url: "{{ route('manage-courses.index') }}",
                 type: "GET",
                 data: function (d) {
                     d.status = $('#filter').val();
@@ -78,7 +78,7 @@
 
             if (!ids.length) return alert('Select records');
 
-            $.post("{{ route('courses.bulk') }}", {
+            $.post("{{ route('manage-courses.bulk') }}", {
                 ids: ids,
                 action: 'delete',
                 _token: "{{ csrf_token() }}"
@@ -89,7 +89,7 @@
             if (!confirm('Delete this course?')) return;
 
             $.ajax({
-                url: '/courses/' + $(this).data('id'),
+                url: '/manage-courses/' + $(this).data('id'),
                 type: 'DELETE',
                 data: { _token: "{{ csrf_token() }}" },
                 success: () => table.ajax.reload()

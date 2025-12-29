@@ -1,6 +1,5 @@
 <?php
 
-// app/Models/Background.php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -13,4 +12,22 @@ class Background extends Model
         'image',
         'status'
     ];
+
+    // ✅ Auto-append this attribute
+    protected $appends = ['thumb_image'];
+
+    /**
+     * Get thumbnail image URL
+     */
+    public function getThumbImageAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+        return  str_replace(
+            'backgrounds/',
+            'backgrounds/thumb/',
+            $this->image
+        );
+    }
 }

@@ -46,7 +46,7 @@ class CourseController extends Controller
                 ->addColumn(
                     'action',
                     fn($r) =>
-                    '<a href="' . route('courses.edit', $r->id) . '" class="btn btn-sm btn-info">Edit</a>
+                    '<a href="' . route('manage-courses.edit', $r->id) . '" class="btn btn-sm btn-info">Edit</a>
                      <button class="btn btn-sm btn-danger delete" data-id="' . $r->id . '">Delete</button>'
                 )
                 ->rawColumns(['checkbox', 'image', 'status', 'action'])
