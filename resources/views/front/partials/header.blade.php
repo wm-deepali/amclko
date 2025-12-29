@@ -1,564 +1,433 @@
-<meta charset="utf-8">
-@if (trim($__env->yieldContent('header')))
-    @yield('header') 
-@endif
-@php
-    $headerSettings = App\Models\HeaderSetting::first();
-    $pageCategories = Helper::getPageCategories();
-    $examinationCommission = App\Models\ExaminationCommission::with('categories.subCategories')->get();
-@endphp
-<meta name="google" content="notranslate">
-<!-- Stylesheets -->
-<style>
-/* Unified mega menu styles for all dropdowns */
-.dropdown {
-    position: relative;
-}
+<!DOCTYPE html>
+<html>
 
-.main-header .main-menu .navigation {
-    position: static;
-}
+<head>
+  <meta charset="utf-8">
+  <title>Academy of Mass Communication</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-.mega-menu-container {
-    display: none;
-    position: fixed;
-    left: 0;
-    top:107px !important;
-    width: 100vw;
-    background: #fff;
-    z-index: 1000;
-    border-top: 2px solid orange;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
+  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('font-awesome-4.6.3/css/font-awesome.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/marquee.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/example.css') }}">
+  <link rel="stylesheet" href="{{ asset('owl-carousel/owl.carousel.css') }}">
+  <link rel="stylesheet" href="{{ asset('owl-carousel/owl.theme.css') }}">
+  <link rel="stylesheet" href="{{ asset('assets/css/lightbox.min.css') }}">
 
+  <script src="https://www.youtube.com/player_api"></script>
 
+  {{-- SAME INLINE CSS – NO CHANGE --}}
+  <style>
+    #owl-demo .item,
+    #owl-demo1 .item,
+    #owl-demo2 .item {
+      display: block;
 
-.mega-menu-left {
-    width: 20%;
-    background: #f9f9f9;
-    border-right: 1px solid #ddd;
-}
-
-.mega-menu-tab {
-    padding: 15px 20px;
-    cursor: pointer;
-    font-weight: 600;
-    border-bottom: 1px solid #eee;
-}
-
-.mega-menu-tab:hover,
-.mega-menu-tab.active {
-    background: orange;
-    color: #fff;
-}
-
-
-/* --- Fix Mega Menu UI (Restores old look but keeps new working script) --- */
-.mega-menu-right {
-    width: 80%;
-    padding: 20px;
-    max-height: 400px; /* Set a fixed height for the right panel */
-    overflow-y: auto; /* Enable vertical scrolling */
-    display: grid; /* Use CSS Grid for layout */
-    /*grid-template-columns: repeat(3, 1fr); */
-    gap: 20px; /* Space between grid items */
-}
-
-.mega-menu-panel {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease;
-}
-
-.mega-menu-panel.active {
-    opacity: 1;
-    visibility: visible;
-    position: relative;
-}
-
-.dropdown.active .mega-menu-container {
-    display: flex !important;
-}
-
-.mega-menu-panel h5 {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.mega-menu-panel ul {
-    list-style: none;
-    padding: 0;
-}
-
-.mega-menu-panel ul li {
-    margin-bottom: 5px;
-}
-
-.mega-menu-panel ul li a {
-    text-decoration: none;
-    color: #333;
-}
-
-.mega-menu-panel ul li a:hover {
-    color: orange;
-}
-
-.mega-menu-panel {
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-
-.mega-menu-panel.active {
-    opacity: 1;
-}
-</style>
-<link href="{{url('assets/css/bootstrap.css')}}" rel="stylesheet">
-<link href="{{url('assets/css/style.css')}}" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-<link href="{{url('assets/css/responsive.css')}}" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-<link rel="shortcut icon" href="{{url('images/favicon.svg')}}" type="image/x-icon">
-<link rel="icon" href="{{url('images/favicon.svg')}}" type="image/x-icon">
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-
-<!-- Responsive -->
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-
-
-<!-- Main Header -->
-<header class="main-header">
-<div class="page-wrapper">
-
-
-    <!-- Header Top -->
-    <div class="header-top">
-        <div class="auto-container d-flex justify-content-between align-items-center flex-wrap">
-            <!-- Left Box -->
-            <div class="left-box d-flex flex-wrap">
-                <ul class="info a">
-                    <li><a href="#"><span class="icon flaticon-phone-call"></span><span class="m-80">{{$headerSettings->contact_number ?? ""}}</span></a></li>
-                    <li style="padding: 0px !important;"><span>|</span></li>
-                    <li><a href="#"><span class="icon flaticon-email"></span><span class="m-80">{{$headerSettings->email_id ?? ""}}</span></a></li>
-                    <li style="padding: 0px !important;"><span>|</span></li>
-                    <li style="padding-left: 0px !important;"><a href="#" style="padding-left: 0px !important;"><img src="{{url('images/resource/whatsapp.png')}}" /> <span class="m-80">{{$headerSettings->whatsapp_number ?? ""}}</span></a></li>
-                </ul>
-            </div>
-
-
-            <!-- Right Box -->
-            <div class="right-box d-flex flex-wrap">
-                <div class="lr-box">
-                    <div class="top-header-login">
-                        <a href="{{route('neti.corner.index')}}" class="theme-btn btn-style-one"><span class="txt">Adhyayanam Corner</span></a>
-                    </div>
-                    <div class="top-header-login">
-                        <a href="{{route('career')}}" class="theme-btn btn-style-one"><span class="txt">Career</span></a>
-                    </div>
-                    <div class="top-header-login">
-                        <a href="{{route('contact.inquiry')}}" class="theme-btn btn-style-one"><span class="txt">Contact Us</span></a>
-                    </div>
-                    <div class="top-header-login">
-                        @if(auth()->user() && auth()->user()->type == 'student')
-                        <a href="{{route('user.dashboard')}}" class="theme-btn btn-style-one"><span class="txt"><i class="flaticon-add-user"></i> Dashboard</span></a>
-                        @else
-                        <a data-bs-toggle="modal" data-bs-target="#lr" class="theme-btn btn-style-one"><span class="txt"><i class="flaticon-add-user"></i> Sign Up / Sign Up</span></a>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Header Lower -->
-    <div class="header-lower">
-        <div class="auto-container container-fluid">
-            <div class="inner-container d-flex justify-content-between align-items-center flex-wrap">
-                <div class="logo-box">
-                    <div class="logo"><a href="{{url('/')}}"><img src="{{ url('images/Neti-logo.png')}}" style="width:150px;" alt="" title=""></a></div>
-                </div>
-                <div class="nav-outer d-flex align-items-center flex-wrap">
-                    <!-- Mobile Navigation Toggler -->
-                    <div class="mobile-nav-toggler"><span class="icon flaticon-menu"></span></div>
-                    <!-- Main Menu -->
-                    <nav class="main-menu show navbar-expand-md">
-                        <div class="navbar-header">
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                        </div>
-
-
-                        <div class="navbar-collapse collapse clearfix" id="navbarSupportedContent">
-                            <ul class="navigation clearfix">
-                                <li><a href="{{url('/')}}">Home</a></li>
-                                <li class="dropdown">
-                                    <a href="#">Our Institute</a>
-                                    <div class="mega-menu-container">
-                                        <div class="mega-menu-left">
-                                            <div class="mega-menu-tab active" data-tab="tab-institute-1">Institute Info</div>
-                                        </div>
-                                        <div class="mega-menu-right">
-                                            <div class="mega-menu-panel active" id="tab-institute-1">
-                                                <h5>Institute Details</h5>
-                                                <ul>
-                                                    <li><a href="{{route('about')}}">About Us</a></li>
-                                                    <li><a href="{{route('our.team.index')}}">Our Team</a></li>
-                                                    <li><a href="{{route('vision.mission')}}">Vision & Mission</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <!-- Courses Dropdown -->
-                                <li class="dropdown">
-                                    <a href="#">Courses</a>
-                                    <div class="mega-menu-container">
-                                        <div class="mega-menu-left">
-                                            @foreach($examinationCommission as $commission)
-                                            <div class="mega-menu-tab {{ $loop->first ? 'active' : '' }}" data-tab="tab-course-{{ $commission->id }}">
-                                                {{ $commission->name }}
-                                            </div>
-                                            @endforeach
-                                        </div>
-                                        <div class="mega-menu-right">
-                                            @foreach($examinationCommission as $commission)
-                                            <div class="mega-menu-panel {{ $loop->first ? 'active' : '' }}" id="tab-course-{{ $commission->id }}" style="width: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr;">
-                                                @foreach($commission->categories as $category)
-                                                <div>
-                                                    <h5>{{ $category->name }}</h5>
-                                                    <ul>
-                                                        @foreach($category->subCategories as $subCat)
-                                                        <li><a href="{{ route('courses.filter', $subCat->id) }}">{{ $subCat->name }}</a></li>
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <!-- Test Series Dropdown -->
-                                <li class="dropdown">
-                                    <a href="#">Test Series</a>
-                                    <div class="mega-menu-container">
-                                        <div class="mega-menu-left">
-                                            @foreach($examinationCommission as $commission)
-                                            <div class="mega-menu-tab {{ $loop->first ? 'active' : '' }}" data-tab="tab-test-{{ $commission->id }}">
-                                                {{ $commission->name }}
-                                            </div>
-                                            @endforeach
-                                        </div>
-                                        <div class="mega-menu-right">
-                                            @foreach($examinationCommission as $commission)
-                                            <div class="mega-menu-panel {{ $loop->first ? 'active' : '' }}" id="tab-test-{{ $commission->id }}" style="width: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr;">
-                                                @foreach($commission->categories as $category)
-                                                <div>
-                                                    <h5>{{ $category->name }}</h5>
-                                                    <ul>
-                                                        @foreach($category->subCategories as $subCat)
-                                                        <li><a href="{{route('test-series',['examid' => $commission->id, 'catid' => $category->id, 'subcat' => $subCat->id])}}">{{ $subCat->name }}</a></li>
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <!-- Study Material Dropdown -->
-                                <li class="dropdown">
-                                    <a href="#">Study Material</a>
-                                    <div class="mega-menu-container">
-                                        <div class="mega-menu-left">
-                                            @foreach($examinationCommission as $commission)
-                                            <div class="mega-menu-tab {{ $loop->first ? 'active' : '' }}" data-tab="tab-study-{{ $commission->id }}">
-                                                {{ $commission->name }}
-                                            </div>
-                                            @endforeach
-                                        </div>
-                                        <div class="mega-menu-right">
-                                            @foreach($examinationCommission as $commission)
-                                            <div class="mega-menu-panel {{ $loop->first ? 'active' : '' }}" id="tab-study-{{ $commission->id }}" style="width: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr;">
-                                                @foreach($commission->categories as $category)
-                                                <div>
-                                                    <h5>{{ $category->name }}</h5>
-                                                    <ul>
-                                                        @foreach($category->subCategories as $subCat)
-                                                        <li>
-                                                            <a href="{{ route('study.material.front', [
-                                                                'examid' => $commission->id,
-                                                                'catid' => $category->id,
-                                                                'subcat' => $subCat->id
-                                                            ]) }}">
-                                                                {{ $subCat->name }}
-                                                            </a>
-                                                        </li>
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <!-- Current Affairs Dropdown -->
-                                <li class="dropdown">
-                                    <a href="#">Current Affairs</a>
-                                    <div class="mega-menu-container">
-                                        <div class="mega-menu-left">
-                                            <div class="mega-menu-tab active" data-tab="tab-current-affairs">Current Affairs</div>
-                                        </div>
-                                        <div class="mega-menu-right">
-                                            <div class="mega-menu-panel active" id="tab-current-affairs">
-                                                <h5>Current Affairs</h5>
-                                                <ul>
-                                                    <li><a href="{{route('current.index')}}">View Current Affairs</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <!-- PYQ Dropdown -->
-                                <li class="dropdown">
-                                    <a href="#">PYQ</a>
-                                    <div class="mega-menu-container">
-                                        <div class="mega-menu-left">
-                                            @foreach($examinationCommission as $commission)
-                                            <div class="mega-menu-tab {{ $loop->first ? 'active' : '' }}" data-tab="tab-pyq-{{ $commission->id }}">
-                                                {{ $commission->name }}
-                                            </div>
-                                            @endforeach
-                                        </div>
-                                        <div class="mega-menu-right">
-                                            @foreach($examinationCommission as $commission)
-                                            <div class="mega-menu-panel {{ $loop->first ? 'active' : '' }}" id="tab-pyq-{{ $commission->id }}" style="width: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr;">
-                                                @foreach($commission->categories as $category)
-                                                <div>
-                                                    <h5>{{ $category->name }}</h5>
-                                                    <ul>
-                                                        @foreach($category->subCategories as $subCat)
-                                                        <li><a href="{{route('pyq-papers',['examid' => $commission->id, 'catid' => $category->id, 'subcat' => $subCat->id])}}">{{ $subCat->name }}</a></li>
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <!-- Syllabus Dropdown -->
-                                <li class="dropdown">
-                                    <a href="#">Syllabus</a>
-                                    <div class="mega-menu-container">
-                                        <div class="mega-menu-left">
-                                            @foreach($examinationCommission as $commission)
-                                            <div class="mega-menu-tab {{ $loop->first ? 'active' : '' }}" data-tab="tab-syllabus-{{ $commission->id }}">
-                                                {{ $commission->name }}
-                                            </div>
-                                            @endforeach
-                                        </div>
-                                        <div class="mega-menu-right">
-                                            @foreach($examinationCommission as $commission)
-                                            <div class="mega-menu-panel {{ $loop->first ? 'active' : '' }}" id="tab-syllabus-{{ $commission->id }}" style="width: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr;">
-                                                @foreach($commission->categories as $category)
-                                                <div>
-                                                    <h5>{{ $category->name }}</h5>
-                                                    <ul>
-                                                        @foreach($category->subCategories as $subCat)
-                                                        <li>
-                                                            <a href="{{ route('syllabus.front', [
-                                                                'examid' => $commission->id,
-                                                                'catid' => $category->id,
-                                                                'subcat' => $subCat->id
-                                                            ]) }}">
-                                                                {{ $subCat->name }}
-                                                            </a>
-                                                        </li>
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                                @endforeach
-                                            </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                </li>
-
-                                <!-- Student Corner Dropdown -->
-                                <li class="dropdown">
-                                    <a href="#">Student Corner</a>
-                                    <div class="mega-menu-container">
-                                        <div class="mega-menu-left">
-                                            <div class="mega-menu-tab active" data-tab="tab-student-corner">Student Resources</div>
-                                        </div>
-                                        <div class="mega-menu-right">
-                                            <div class="mega-menu-panel active" id="tab-student-corner">
-                                                <h5>Resources</h5>
-                                                <ul>
-                                                    <li><a href="{{route('daily.boost.front')}}">Daily Booster</a></li>
-                                                    <li><a href="{{route('test.planner.front')}}">Test Planner</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </nav>
-                    <!-- Main Menu End-->
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Header Lower -->
-
-
-    <!-- Sticky Header -->
-    <div class="sticky-header">
-        <div class="container d-flex justify-content-between align-items-center flex-wrap">
-            <div class="logo">
-                <a href="{{url('/')}}" title=""><img src="{{url('images/Neti-logo.png')}}" style="width:150px;" alt="Adhyayanam Logo" title=""></a>
-            </div>
-            <nav class="main-menu"></nav>
-            <div class="mobile-nav-toggler"><span class="icon flaticon-menu"></span></div>
-        </div>
-    </div><!-- End Sticky Menu -->
-
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu">
-        <div class="menu-backdrop"></div>
-        <div class="close-btn"><span class="icon flaticon-cancel"></span></div>
-        <nav class="menu-box">
-            <div class="nav-logo"><a href="index-2.html"><img src="{{url('images/logo.png')}}" alt="" title=""></a></div>
-            <div class="menu-outer"></div>
-        </nav>
-    </div><!-- End Mobile Menu -->
-</div>
-</header>
-
-
-<!-- Bottom header -->
-@php
-    $marquees = App\Models\Marquee::all();
-@endphp
-<div class="bottom-header">
-    <div class="container">
-        <div class="maq-container">
-            <div class="latest-head">
-                <span>LATEST NEWS :</span>
-            </div>
-            <div class="marq-info">
-                <marquee class="mar" width="90%" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
-                    @foreach($marquees as $key=>$data)
-                    <a style="text-decoration:none;color:white;" href="{{$data->link}}">{{$data->title}},</a>
-                    @endforeach
-                </marquee>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Function to initialize a header's mega menu
-    function initMegaMenu(headerSelector) {
-        const header = document.querySelector(headerSelector);
-        if (!header) return;
-
-        const dropdowns = header.querySelectorAll('.dropdown');
-        const tabs = header.querySelectorAll('.mega-menu-tab');
-
-        // Calculate and set the top for each mega menu container
-        function updateMegaMenuTop() {
-            const headerHeight = header.offsetHeight;
-            header.querySelectorAll('.mega-menu-container').forEach(menu => {
-                menu.style.top = `${headerHeight}px`;
-            });
-        }
-
-        updateMegaMenuTop();
-        window.addEventListener('resize', updateMegaMenuTop);
-
-        // Choose activation method: 'hover' or 'click'
-        const activationMethod = 'hover';
-
-        // Dropdown activation
-        dropdowns.forEach(dropdown => {
-            if (activationMethod === 'hover') {
-                dropdown.addEventListener('mouseenter', () => {
-                    dropdowns.forEach(d => d.classList.remove('active'));
-                    dropdown.classList.add('active');
-                });
-                dropdown.addEventListener('mouseleave', () => {
-                    dropdown.classList.remove('active');
-                });
-            } else { // click mode
-                dropdown.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const isActive = this.classList.contains('active');
-                    dropdowns.forEach(d => d.classList.remove('active'));
-                    if (!isActive) {
-                        this.classList.add('active');
-                    }
-                });
-            }
-        });
-
-        // Tab activation
-        tabs.forEach(tab => {
-            tab.addEventListener('mouseenter', function () {
-                const parentContainer = this.closest('.mega-menu-container');
-                const siblingTabs = parentContainer.querySelectorAll('.mega-menu-tab');
-                const siblingPanels = parentContainer.querySelectorAll('.mega-menu-panel');
-
-                siblingTabs.forEach(t => t.classList.remove('active'));
-                siblingPanels.forEach(p => p.classList.remove('active'));
-
-                const tabId = this.getAttribute('data-tab');
-                const activePanel = parentContainer.querySelector(`#${tabId}`);
-
-                this.classList.add('active');
-                if (activePanel) activePanel.classList.add('active');
-            });
-        });
-
-        // Close dropdowns when clicking outside (for click mode)
-        if (activationMethod === 'click') {
-            document.addEventListener('click', function (e) {
-                if (!e.target.closest(headerSelector + ' .dropdown')) {
-                    dropdowns.forEach(d => d.classList.remove('active'));
-                }
-            });
-        }
+      margin: 0px 10px;
+      color: #FFF;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+      text-align: center;
     }
 
-    // Initialize mega menus for both main header and sticky header
-    initMegaMenu('.header-lower');
-    initMegaMenu('.sticky-header');
-});
-</script>
+    .owl-theme .owl-controls .owl-buttons div {
+      padding: 10px 11px;
+    }
+
+    .owl-theme .owl-buttons i {
+      margin-top: 2px;
+    }
+
+    /*To move navigation buttons outside use these settings:*/
+
+    .owl-theme .owl-controls .owl-buttons div {
+      position: absolute;
+    }
+
+    .owl-theme .owl-controls .owl-buttons .owl-prev {
+      left: 0;
+      top: 50%;
+    }
+
+    .owl-theme .owl-controls .owl-buttons .owl-next {
+      right: 0px;
+      top: 50%;
+    }
+
+    .owl-pagination {
+      display: none;
+    }
+
+    .header-right-buttons {
+      padding: 10px 0;
+    }
+
+    .header-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .header-btn i {
+      font-size: 16px;
+    }
+
+    /* Outline Button Style (Contact & Career) */
+    .header-btn-outline {
+      background: transparent;
+      color: #1a237e;
+      border: 1px solid #1a237e;
+    }
+
+    .header-btn-outline:hover {
+      background: #1a237e;
+      color: white !important;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(26, 35, 126, 0.3);
+    }
+
+    /* Primary Button (Send Enquiry) */
+    .header-btn-primary {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+      color: white;
+      border: none;
+      box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
+    }
+
+    .header-btn-primary:hover {
+      background: linear-gradient(135deg, #ff5252, #d32f2f);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(255, 82, 82, 0.5);
+      color: white !important;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 991px) {
+      .header-right-buttons {
+        justify-content: center;
+        margin-top: 15px;
+        flex-wrap: wrap;
+      }
+
+      .header-btn {
+        font-size: 14px;
+        padding: 5px 16px;
+      }
+    }
+
+    /* ===== AMC NAVBAR - FULLY OVERRIDE-PROOF ===== */
+    .amc-navbar-container {
+      background: linear-gradient(135deg, #0A1D56 0%, #1e3a8a 100%) !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border-bottom: 4px solid #FF6B35;
+    }
+
+    .amc-navbar-main {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      margin-bottom: 0 !important;
+    }
+
+    .amc-navbar-center {
+      float: none !important;
+      display: table !important;
+      margin: 0 auto !important;
+      text-align: center !important;
+    }
+
+    .amc-menu-link {
+      color: #ffffff !important;
+      font-weight: 600 !important;
+      font-size: 15px !important;
+      padding: 18px 15px !important;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative !important;
+      transition: all 0.35s ease !important;
+    }
+
+    .amc-menu-link:hover,
+    .amc-menu-link:focus,
+    .amc-menu-link.active {
+      color: #FF6B35 !important;
+      background: transparent !important;
+    }
+
+    /* Orange Underline Hover Effect */
+    .amc-menu-link::after {
+      content: '';
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      width: 0;
+      height: 3px;
+      background: #FF6B35;
+      transition: all 0.4s ease;
+      transform: translateX(-50%);
+    }
+
+    .amc-menu-link:hover::after {
+      width: 70% !important;
+    }
+
+    /* Custom Caret */
+    .amc-caret {
+      display: inline-block;
+      width: 0;
+      height: 0;
+      margin-left: 8px;
+      vertical-align: middle;
+      border-top: 6px solid #FF6B35;
+      border-right: 5px solid transparent;
+      border-left: 5px solid transparent;
+    }
+
+    /* Dropdown Menu - No White Background! */
+    .amc-dropdown {
+      background: #0A1D56 !important;
+      border: none !important;
+      border-radius: 0 0 12px 12px !important;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5) !important;
+      margin-top: 0 !important;
+      padding: 10px 0 !important;
+      min-width: 220px !important;
+    }
+
+    .amc-dropdown>li>a {
+      color: #e0e0e0 !important;
+      padding: 12px 28px !important;
+      font-weight: 500 !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .amc-dropdown>li>a:hover {
+      background: #FF6B35 !important;
+      color: white !important;
+      padding-left: 35px !important;
+    }
+
+    /* Mobile Menu */
+    @media (max-width: 991px) {
+      .amc-navbar-center {
+        display: block !important;
+        text-align: left !important;
+      }
+
+      .amc-menu-link {
+        padding: 14px 20px !important;
+      }
+
+      .amc-dropdown {
+        background: #0c2a6e !important;
+        box-shadow: none !important;
+      }
+    }
+
+    @media (min-width: 541px) {
+      .navbar-header .logo {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .header {
+        display: none;
+      }
+
+      .navbar-header {
+        display: flex;
+        background: #fff;
+        padding: 5px 10px;
+        align-items: center;
+      }
+
+      .logo a img {
+        width: 100%;
+      }
+
+      .amc-intro-section {
+        padding: 40px 0;
+        background: #ffffff;
+        overflow: hidden;
+      }
+
+      .report-grid {
+        display: grid;
+        grid-template-columns: 1fr !important;
+        gap: 25px;
+      }
+
+      .annual-report-section {
+        height: auto !important;
+        padding: 60px 0;
+        background: #f7f9fc;
+      }
+
+      .amc-course-card {
+        grid-template-columns: 1fr !important;
+      }
+
+      .content-block h1 {
+        font-size: 28px !important;
+      }
+
+      .our-work h1 {
+        font-size: 28px !important;
+        margin-top: 20px !important;
+      }
+
+      .amc-intro-section {
+        padding: 40px 0 !important;
+      }
+
+      .marquee-sibling {
+        width: 40% !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="logo">
+            <a href="{{ url('/') }}">
+              <img src="{{ asset('images/logo.png') }}" class="img-responsive">
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-12">
+          <div class="header-right-buttons" style="display:flex;justify-content:flex-end;gap:15px;">
+            <a href="{{ url('contact-us') }}" class="header-btn header-btn-outline">
+              <i class="fa fa-phone"></i> Contact Us
+            </a>
+
+            <a href="{{ url('career') }}" class="header-btn header-btn-outline">
+              <i class="fa fa-briefcase"></i> Career
+            </a>
+
+            <a href="#" class="header-btn header-btn-primary" data-toggle="modal" data-target="#myModal">
+              <i class="fa fa-envelope"></i> Send Enquiry
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- NAVBAR – SAME STRUCTURE --}}
+  <div class="amc-navbar-container">
+    <nav class="navbar navbar-default amc-navbar-main">
+      <div class="container">
+
+        <div class="navbar-header">
+          <div class="logo">
+            <a href="{{ url('/') }}">
+              <img src="{{ asset('images/logo.png') }}" class="img-responsive">
+            </a>
+          </div>
+
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#amcMainMenu">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+
+        <div class="collapse navbar-collapse" id="amcMainMenu">
+          <ul class="nav navbar-nav amc-navbar-center">
+
+            <li>
+              <a href="{{ url('/') }}" class="amc-menu-link">Home</a>
+            </li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle amc-menu-link" data-toggle="dropdown">
+                About Us <span class="amc-caret"></span>
+              </a>
+              <ul class="dropdown-menu amc-dropdown">
+                <li><a href="{{ url('chairman-message') }}">Message from Chairman</a></li>
+                <li><a href="{{ url('secratry-message') }}">Message from Secretary</a></li>
+                <li><a href="{{ url('about-us') }}">About Institution</a></li>
+                <li><a href="{{ url('vision-mission') }}">Vision & Mission</a></li>
+                <li><a href="{{ asset('images/aims.jpg') }}" target="_blank">Aims & Objectives</a></li>
+                <li><a href="{{ url('view-certificate') }}">View Certification</a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle amc-menu-link" data-toggle="dropdown">
+                Admission & Courses <span class="amc-caret"></span>
+              </a>
+              <ul class="dropdown-menu amc-dropdown">
+                <li><a href="{{ url('applicationform') }}">Admission Form</a></li>
+                <li><a href="{{ url('courses') }}">Our Courses</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="{{ url('program') }}" class="amc-menu-link">Programmes</a>
+            </li>
+
+            <li>
+              <a href="{{ url('annual-report') }}" class="amc-menu-link">Annual Report</a>
+            </li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle amc-menu-link" data-toggle="dropdown">
+                Affiliation <span class="amc-caret"></span>
+              </a>
+              <ul class="dropdown-menu amc-dropdown">
+                <li><a href="{{ url('govt-recognition') }}">Govt. Recognition</a></li>
+                <li><a href="{{ url('skill-development') }}">Skill Development</a></li>
+                <li><a href="{{ url('urdu-academy') }}">Urdu Academy</a></li>
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle amc-menu-link" data-toggle="dropdown">
+                Gallery <span class="amc-caret"></span>
+              </a>
+              <ul class="dropdown-menu amc-dropdown">
+                <li><a href="{{ url('photo-gallery') }}">Image Gallery</a></li>
+                <li><a href="{{ url('video-gallery') }}">Video Gallery</a></li>
+              </ul>
+            </li>
+
+          </ul>
+
+        </div>
+
+      </div>
+    </nav>
+  </div>
+
+  <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+  <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('assets/js/wow.min.js') }}"></script>
+  <script src="{{ asset('assets/js/marquee.js') }}"></script>
+
+  <script>
+    $(function () {
+      $('.simple-marquee-container').SimpleMarquee();
+    });
+  </script>
+
+</body>
+
+</html>
