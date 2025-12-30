@@ -15,7 +15,7 @@
                     <option value="block">Blocked</option>
                 </select>
 
-                <a href="{{ route('abouts.create') }}" class="btn btn-primary ms-auto">
+                <a href="{{ route('manage-abouts.create') }}" class="btn btn-primary ms-auto">
                     + Add About
                 </a>
             </div>
@@ -56,7 +56,7 @@ $(function () {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ route('abouts.index') }}",
+            url: "{{ route('manage-abouts.index') }}",
             data: function (d) {
                 d.status = $('#statusFilter').val();
             }
@@ -100,7 +100,7 @@ $(function () {
             confirmButtonText: 'Delete'
         }).then(result => {
             if (result.isConfirmed) {
-                $.post("{{ route('abouts.bulk') }}", {
+                $.post("{{ route('manage-abouts.bulk') }}", {
                     _token: "{{ csrf_token() }}",
                     ids: ids,
                     action: 'delete'
@@ -125,7 +125,7 @@ $(function () {
         }).then(result => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{ url('admin/abouts') }}/" + id,
+                    url: "{{ url('/manage-abouts') }}/" + id,
                     type: "DELETE",
                     data: { _token: "{{ csrf_token() }}" },
                     success: function () {

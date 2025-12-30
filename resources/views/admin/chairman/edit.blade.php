@@ -49,7 +49,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Update</button>
-                    <a href="{{ route('chairmen.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-chairmen.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -70,14 +70,14 @@ $('#chairmanEditForm').submit(function(e){
     fd.set('content', CKEDITOR.instances.editor.getData());
 
     $.ajax({
-        url:"{{ route('chairmen.update',$chairman->id) }}",
+        url:"{{ route('manage-chairmen.update',$chairman->id) }}",
         type:"POST",
         data:fd,
         processData:false,
         contentType:false,
         success:()=>{
             Swal.fire('Success','Updated successfully','success')
-            .then(()=>location.href="{{ route('chairmen.index') }}");
+            .then(()=>location.href="{{ route('manage-chairmen.index') }}");
         }
     });
 });

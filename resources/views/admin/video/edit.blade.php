@@ -29,7 +29,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Update</button>
-                    <a href="{{ route('videos.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-videos.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -44,12 +44,12 @@ $('#videoEditForm').submit(function(e){
     e.preventDefault();
 
     $.ajax({
-        url:"{{ route('videos.update',$video->id) }}",
+        url:"{{ route('manage-videos.update',$video->id) }}",
         type:"POST",
         data:$(this).serialize(),
         success:function(){
             Swal.fire('Success','Video updated','success')
-                .then(()=>location.href="{{ route('videos.index') }}");
+                .then(()=>location.href="{{ route('manage-videos.index') }}");
         }
     });
 });

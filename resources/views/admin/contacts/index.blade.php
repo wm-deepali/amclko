@@ -14,7 +14,7 @@
                         <option value="block">Blocked</option>
                     </select>
 
-                    <a href="{{ route('contacts.create') }}" class="btn btn-primary ms-auto">
+                    <a href="{{ route('manage-contacts.create') }}" class="btn btn-primary ms-auto">
                         + Add Contact
                     </a>
                 </div>
@@ -43,7 +43,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route('contacts.index') }}",
+                url: "{{ route('manage-contacts.index') }}",
                 data: function (d) {
                     d.status = $('#statusFilter').val();
                 }
@@ -75,7 +75,7 @@
             }).then(result => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "{{ url('admin/contacts') }}/" + id,
+                        url: "{{ url('manage-contacts') }}/" + id,
                         type: "DELETE",
                         data: { _token: "{{ csrf_token() }}" },
                         success: () => table.ajax.reload()

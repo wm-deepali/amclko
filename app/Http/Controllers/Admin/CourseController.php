@@ -93,13 +93,15 @@ class CourseController extends Controller
     /* ===============================
      |  EDIT
      =============================== */
-    public function edit(Course $course)
+    public function edit($id)
     {
+        $course = Course::findOrFail($id);
         return view('admin.courses.edit', compact('course'));
     }
 
-    public function update(Request $request, Course $course)
+    public function update(Request $request, $id)
     {
+        $course = Course::findOrFail($id);
         $request->validate([
             'title' => 'required',
             'url' => 'nullable',
@@ -134,12 +136,15 @@ class CourseController extends Controller
     /* ===============================
      |  DELETE
      =============================== */
-    public function destroy(Course $course)
+    public function destroy($id)
     {
-        Storage::disk('public')->delete([
-            $course->image,
-            str_replace('courses/', 'courses/thumb/', $course->image)
-        ]);
+        $course = Course::findOrFail($id);
+        if ($course->image) {
+            Storage::disk('public')->delete([
+                $course->image,
+                str_replace('courses/', 'courses/thumb/', $course->image)
+            ]);
+        }
 
         $course->delete();
 

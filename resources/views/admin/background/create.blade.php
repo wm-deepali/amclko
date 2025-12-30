@@ -32,7 +32,7 @@
 
                 <div class="text-end">
                     <button type="submit" class="btn btn-primary">Add</button>
-                    <a href="{{ route('backgrounds.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-backgrounds.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -59,14 +59,14 @@
         formData.set('content', CKEDITOR.instances.editor.getData());
 
         $.ajax({
-            url: "{{ route('backgrounds.store') }}",
+            url: "{{ route('manage-backgrounds.store') }}",
             type: "POST",
             data: formData,
             processData:false,
             contentType:false,
             success: function () {
                 Swal.fire('Success','Background added successfully','success')
-                    .then(()=> window.location.href="{{ route('backgrounds.index') }}");
+                    .then(()=> window.location.href="{{ route('manage-backgrounds.index') }}");
             },
             error: function (xhr) {
                 let msg='';

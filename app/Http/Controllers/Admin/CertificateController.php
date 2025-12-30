@@ -22,28 +22,36 @@ class CertificateController extends Controller
             }
 
             return DataTables::of($query)
-                ->addColumn('checkbox', fn($r) =>
-                    '<input type="checkbox" class="row_check" value="'.$r->id.'">'
+                ->addColumn(
+                    'checkbox',
+                    fn($r) =>
+                    '<input type="checkbox" class="row_check" value="' . $r->id . '">'
                 )
-                ->addColumn('image', fn($r) =>
-                    '<img src="'.asset('storage/'.str_replace(
+                ->addColumn(
+                    'image',
+                    fn($r) =>
+                    '<img src="' . asset('storage/' . str_replace(
                         'certificates/',
                         'certificates/thumb/',
                         $r->image
-                    )).'" height="60">'
+                    )) . '" height="60">'
                 )
-                ->addColumn('status', fn($r) =>
+                ->addColumn(
+                    'status',
+                    fn($r) =>
                     $r->status === 'active'
-                        ? '<span class="badge bg-success">Active</span>'
-                        : '<span class="badge bg-danger">Blocked</span>'
+                    ? '<span class="badge bg-success">Active</span>'
+                    : '<span class="badge bg-danger">Blocked</span>'
                 )
-                ->addColumn('action', fn($r) =>
+                ->addColumn(
+                    'action',
+                    fn($r) =>
                     '
-                        <a href="'.route('certificates.edit',$r->id).'" class="btn btn-sm btn-info">Edit</a>
-                        <button class="btn btn-sm btn-danger delete" data-id="'.$r->id.'">Delete</button>
+                        <a href="' . route('manage-certificates.edit', $r->id) . '" class="btn btn-sm btn-info">Edit</a>
+                        <button class="btn btn-sm btn-danger delete" data-id="' . $r->id . '">Delete</button>
                     '
                 )
-                ->rawColumns(['checkbox','image','status','action'])
+                ->rawColumns(['checkbox', 'image', 'status', 'action'])
                 ->make(true);
         }
 
@@ -70,21 +78,23 @@ class CertificateController extends Controller
         );
 
         Certificate::create([
-            'image'  => $image,
+            'image' => $image,
             'status' => 'active'
         ]);
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= EDIT ================= */
-    public function edit(Certificate $certificate)
+    public function edit($id)
     {
+        $certificate = Certificate::findOrFail($id);
         return view('admin.certificates.edit', compact('certificate'));
     }
 
-    public function update(Request $request, Certificate $certificate)
+    public function update(Request $request, $id)
     {
+        $certificate = Certificate::findOrFail($id);
         $request->validate([
             'image' => 'nullable|image|max:2048'
         ]);
@@ -110,31 +120,34 @@ class CertificateController extends Controller
 
         $certificate->save();
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= DELETE ================= */
-    public function destroy(Certificate $certificate)
+    public function destroy($id)
     {
-        Storage::disk('public')->delete([
-            $certificate->image,
-            str_replace(
-                'certificates/',
-                'certificates/thumb/',
-                $certificate->image
-            )
-        ]);
+        $certificate = Certificate::findOrFail($id);
+        if ($certificate->image) {
+            Storage::disk('public')->delete([
+                $certificate->image,
+                str_replace(
+                    'certificates/',
+                    'certificates/thumb/',
+                    $certificate->image
+                )
+            ]);
+        }
 
         $certificate->delete();
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= BULK ================= */
     public function bulk(Request $request)
     {
         if ($request->action === 'delete') {
-            Certificate::whereIn('id',$request->ids)->get()->each(function ($c) {
+            Certificate::whereIn('id', $request->ids)->get()->each(function ($c) {
                 Storage::disk('public')->delete([
                     $c->image,
                     str_replace(
@@ -147,32 +160,40 @@ class CertificateController extends Controller
             });
         }
 
-        if (in_array($request->action,['active','block'])) {
-            Certificate::whereIn('id',$request->ids)
-                ->update(['status'=>$request->action]);
+        if (in_array($request->action, ['active', 'block'])) {
+            Certificate::whereIn('id', $request->ids)
+                ->update(['status' => $request->action]);
         }
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= IMAGE HANDLER ================= */
-    private function saveImage($file,$dir,$w,$h)
+    private function saveImage($file, $dir, $w, $h)
     {
-        $name = 'gallery_'.time().'.'.$file->getClientOriginalExtension();
+        $name = 'gallery_' . time() . '.' . $file->getClientOriginalExtension();
 
         // original
-        $file->storeAs($dir,$name,'public');
+        $file->storeAs($dir, $name, 'public');
 
         // thumb (same as PHP)
-        $src   = imagecreatefromstring(file_get_contents($file));
-        $thumb = imagecreatetruecolor($w,$h);
+        $src = imagecreatefromstring(file_get_contents($file));
+        $thumb = imagecreatetruecolor($w, $h);
 
         imagecopyresampled(
-            $thumb,$src,0,0,0,0,$w,$h,
-            imagesx($src),imagesy($src)
+            $thumb,
+            $src,
+            0,
+            0,
+            0,
+            0,
+            $w,
+            $h,
+            imagesx($src),
+            imagesy($src)
         );
 
-        Storage::disk('public')->makeDirectory($dir.'/thumb');
+        Storage::disk('public')->makeDirectory($dir . '/thumb');
 
         imagejpeg(
             $thumb,

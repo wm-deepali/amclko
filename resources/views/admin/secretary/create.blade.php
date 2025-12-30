@@ -29,7 +29,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Save</button>
-                    <a href="{{ route('secretaries.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-secretaries.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -50,14 +50,14 @@ $('#secretaryCreateForm').submit(function(e){
     fd.set('content', CKEDITOR.instances.editor.getData());
 
     $.ajax({
-        url:"{{ route('secretaries.store') }}",
+        url:"{{ route('manage-secretaries.store') }}",
         type:"POST",
         data:fd,
         processData:false,
         contentType:false,
         success:()=>{
             Swal.fire('Success','Added successfully','success')
-            .then(()=>location.href="{{ route('secretaries.index') }}");
+            .then(()=>location.href="{{ route('manage-secretaries.index') }}");
         }
     });
 });

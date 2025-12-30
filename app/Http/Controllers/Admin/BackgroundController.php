@@ -45,7 +45,7 @@ class BackgroundController extends Controller
                 })
                 ->addColumn('action', function ($r) {
                     return '
-                        <a href="' . route('backgrounds.edit', $r->id) . '" class="btn btn-sm btn-info">Edit</a>
+                        <a href="' . route('manage-backgrounds.edit', $r->id) . '" class="btn btn-sm btn-info">Edit</a>
                         <button class="btn btn-sm btn-danger delete" data-id="' . $r->id . '">Delete</button>
                     ';
                 })
@@ -91,13 +91,15 @@ class BackgroundController extends Controller
     }
 
     /* ================= EDIT ================= */
-    public function edit(Background $background)
+    public function edit($id)
     {
+        $background = Background::findOrFail($id);
         return view('admin.background.edit', compact('background'));
     }
 
-    public function update(Request $request, Background $background)
+    public function update(Request $request, $id)
     {
+        $background = Background::findOrFail($id);
         $request->validate([
             'title' => 'required',
             'status' => 'required|in:active,block',
@@ -138,8 +140,9 @@ class BackgroundController extends Controller
 
 
     /* ================= DELETE ================= */
-    public function destroy(Background $background)
+    public function destroy($id)
     {
+        $background = Background::findOrFail($id);
         if ($background->image) {
             Storage::disk('public')->delete([
                 $background->image,

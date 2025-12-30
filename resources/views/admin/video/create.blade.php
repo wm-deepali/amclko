@@ -19,7 +19,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Add</button>
-                    <a href="{{ route('videos.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-videos.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -34,12 +34,12 @@ $('#videoForm').submit(function(e){
     e.preventDefault();
 
     $.ajax({
-        url:"{{ route('videos.store') }}",
+        url:"{{ route('manage-videos.store') }}",
         type:"POST",
         data:$(this).serialize(),
         success:function(){
             Swal.fire('Success','Video added','success')
-                .then(()=>location.href="{{ route('videos.index') }}");
+                .then(()=>location.href="{{ route('manage-videos.index') }}");
         }
     });
 });

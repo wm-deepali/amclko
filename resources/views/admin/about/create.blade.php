@@ -30,7 +30,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Save</button>
-                    <a href="{{ route('abouts.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-abouts.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -51,14 +51,14 @@ $('#aboutCreateForm').submit(function(e){
     fd.set('content', CKEDITOR.instances.editor.getData());
 
     $.ajax({
-        url: "{{ route('abouts.store') }}",
+        url: "{{ route('manage-abouts.store') }}",
         type: "POST",
         data: fd,
         processData:false,
         contentType:false,
         success: () => {
             Swal.fire('Success','Added successfully','success')
-            .then(()=>location.href="{{ route('abouts.index') }}");
+            .then(()=>location.href="{{ route('manage-abouts.index') }}");
         },
         error: xhr => {
             let msg='';

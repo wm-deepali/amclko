@@ -49,7 +49,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Update Slider</button>
-                    <a href="{{ route('sliders.index') }}" class="btn btn-secondary">Back</a>
+                    <a href="{{ route('manage-sliders.index') }}" class="btn btn-secondary">Back</a>
                 </div>
 
             </form>
@@ -67,14 +67,14 @@ $('#sliderEditForm').submit(function(e){
     let formData = new FormData(this);
 
     $.ajax({
-        url: "{{ route('sliders.update',$slider->id) }}",
+        url: "{{ route('manage-sliders.update',$slider->id) }}",
         method: "POST",
         data: formData,
         processData: false,
         contentType: false,
         success: function () {
             Swal.fire('Success','Slider updated successfully','success')
-                .then(() => window.location.href = "{{ route('sliders.index') }}");
+                .then(() => window.location.href = "{{ route('manage-sliders.index') }}");
         },
         error: function (xhr) {
             let msg = '';

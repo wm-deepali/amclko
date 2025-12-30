@@ -23,28 +23,36 @@ class UrduAcademyController extends Controller
             }
 
             return DataTables::of($query)
-                ->addColumn('checkbox', fn($r) =>
-                    '<input type="checkbox" class="row_check" value="'.$r->id.'">'
+                ->addColumn(
+                    'checkbox',
+                    fn($r) =>
+                    '<input type="checkbox" class="row_check" value="' . $r->id . '">'
                 )
-                ->addColumn('image', fn($r) =>
+                ->addColumn(
+                    'image',
+                    fn($r) =>
                     $r->image
-                        ? '<img src="'.asset('storage/'.str_replace(
-                            'affiliation/',
-                            'affiliation/thumb/',
-                            $r->image
-                        )).'" height="60">'
-                        : ''
+                    ? '<img src="' . asset('storage/' . str_replace(
+                        'affiliation/',
+                        'affiliation/thumb/',
+                        $r->image
+                    )) . '" height="60">'
+                    : ''
                 )
-                ->addColumn('status', fn($r) =>
+                ->addColumn(
+                    'status',
+                    fn($r) =>
                     $r->status === 'active'
-                        ? '<span class="badge bg-success">Active</span>'
-                        : '<span class="badge bg-danger">Blocked</span>'
+                    ? '<span class="badge bg-success">Active</span>'
+                    : '<span class="badge bg-danger">Blocked</span>'
                 )
-                ->addColumn('action', fn($r) =>
-                    '<a href="'.route('manage-urdu-academy.edit',$r).'" class="btn btn-sm btn-info">Edit</a>
-                     <button class="btn btn-sm btn-danger delete" data-id="'.$r->id.'">Delete</button>'
+                ->addColumn(
+                    'action',
+                    fn($r) =>
+                    '<a href="' . route('manage-urdu-academy.edit', $r) . '" class="btn btn-sm btn-info">Edit</a>
+                     <button class="btn btn-sm btn-danger delete" data-id="' . $r->id . '">Delete</button>'
                 )
-                ->rawColumns(['checkbox','image','status','action'])
+                ->rawColumns(['checkbox', 'image', 'status', 'action'])
                 ->make(true);
         }
 
@@ -60,15 +68,15 @@ class UrduAcademyController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'   => 'required',
+            'title' => 'required',
             'content' => 'nullable',
-            'image'   => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:2048',
         ]);
 
         $academy = UrduAcademy::create([
-            'title'   => $request->title,
+            'title' => $request->title,
             'content' => $request->content,
-            'status'  => 'active',
+            'status' => 'active',
         ]);
 
         if ($request->hasFile('image')) {
@@ -81,30 +89,32 @@ class UrduAcademyController extends Controller
             $academy->save();
         }
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= EDIT ================= */
-    public function edit(UrduAcademy $urdu_academy)
+    public function edit($id)
     {
+        $urdu_academy = UrduAcademy::find($id);
         return view('admin.urdu-academy.edit', [
             'academy' => $urdu_academy
         ]);
     }
 
-    public function update(Request $request, UrduAcademy $urdu_academy)
+    public function update(Request $request, $id)
     {
+        $urdu_academy = UrduAcademy::find($id);
         $request->validate([
-            'title'   => 'required',
+            'title' => 'required',
             'content' => 'nullable',
-            'image'   => 'nullable|image|max:2048',
-            'status'  => 'required|in:active,block'
+            'image' => 'nullable|image|max:2048',
+            'status' => 'required|in:active,block'
         ]);
 
         $urdu_academy->update([
-            'title'   => $request->title,
+            'title' => $request->title,
             'content' => $request->content,
-            'status'  => $request->status,
+            'status' => $request->status,
         ]);
 
         if ($request->hasFile('image')) {
@@ -123,27 +133,30 @@ class UrduAcademyController extends Controller
             $urdu_academy->save();
         }
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= DELETE ================= */
-    public function destroy(UrduAcademy $urdu_academy)
+    public function destroy($id)
     {
-        Storage::disk('public')->delete([
-            $urdu_academy->image,
-            str_replace('affiliation/', 'affiliation/thumb/', $urdu_academy->image)
-        ]);
+        $urdu_academy = UrduAcademy::find($id);
+        if ($urdu_academy->image) {
+            Storage::disk('public')->delete([
+                $urdu_academy->image,
+                str_replace('affiliation/', 'affiliation/thumb/', $urdu_academy->image)
+            ]);
+        }
 
         $urdu_academy->delete();
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= BULK ================= */
     public function bulk(Request $request)
     {
         if ($request->action === 'delete') {
-            UrduAcademy::whereIn('id',$request->ids)->get()->each(function ($r) {
+            UrduAcademy::whereIn('id', $request->ids)->get()->each(function ($r) {
                 Storage::disk('public')->delete([
                     $r->image,
                     str_replace('affiliation/', 'affiliation/thumb/', $r->image)
@@ -151,29 +164,37 @@ class UrduAcademyController extends Controller
                 $r->delete();
             });
         } else {
-            UrduAcademy::whereIn('id',$request->ids)
-                ->update(['status'=>$request->action]);
+            UrduAcademy::whereIn('id', $request->ids)
+                ->update(['status' => $request->action]);
         }
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= IMAGE HANDLER ================= */
-    private function saveImage($file,$dir,$w,$h)
+    private function saveImage($file, $dir, $w, $h)
     {
-        $name = 'affiliation_'.time().'.'.$file->getClientOriginalExtension();
+        $name = 'affiliation_' . time() . '.' . $file->getClientOriginalExtension();
 
-        $file->storeAs($dir,$name,'public');
+        $file->storeAs($dir, $name, 'public');
 
-        $src   = imagecreatefromstring(file_get_contents($file));
-        $thumb = imagecreatetruecolor($w,$h);
+        $src = imagecreatefromstring(file_get_contents($file));
+        $thumb = imagecreatetruecolor($w, $h);
 
         imagecopyresampled(
-            $thumb,$src,0,0,0,0,$w,$h,
-            imagesx($src),imagesy($src)
+            $thumb,
+            $src,
+            0,
+            0,
+            0,
+            0,
+            $w,
+            $h,
+            imagesx($src),
+            imagesy($src)
         );
 
-        Storage::disk('public')->makeDirectory($dir.'/thumb');
+        Storage::disk('public')->makeDirectory($dir . '/thumb');
 
         imagejpeg(
             $thumb,

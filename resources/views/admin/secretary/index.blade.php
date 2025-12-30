@@ -14,7 +14,7 @@
                         <option value="block">Blocked</option>
                     </select>
 
-                    <a href="{{ route('secretaries.create') }}" class="btn btn-primary ms-auto">
+                    <a href="{{ route('manage-secretaries.create') }}" class="btn btn-primary ms-auto">
                         + Add Secretary Message
                     </a>
                 </div>
@@ -53,7 +53,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route('secretaries.index') }}",
+                url: "{{ route('manage-secretaries.index') }}",
                 data: function (d) {
                     d.status = $('#statusFilter').val();
                 }
@@ -94,7 +94,7 @@
                 showCancelButton: true
             }).then(res => {
                 if (res.isConfirmed) {
-                    $.post("{{ route('secretaries.bulk') }}", {
+                    $.post("{{ route('manage-secretaries.bulk') }}", {
                         _token: "{{ csrf_token() }}",
                         ids: ids,
                         action: action
@@ -113,7 +113,7 @@
             }).then(res => {
                 if (res.isConfirmed) {
                     $.ajax({
-                        url: "{{ url('admin/secretaries') }}/" + id,
+                        url: "{{ url('/manage-secretaries') }}/" + id,
                         type: "DELETE",
                         data: { _token: "{{ csrf_token() }}" },
                         success: () => table.ajax.reload()

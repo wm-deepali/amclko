@@ -53,7 +53,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Update</button>
-                    <a href="{{ route('missions.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-missions.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -74,14 +74,14 @@ $('#missionEditForm').submit(function(e){
     fd.set('content', CKEDITOR.instances.editor.getData());
 
     $.ajax({
-        url:"{{ route('missions.update',$mission->id) }}",
+        url:"{{ route('manage-missions.update',$mission->id) }}",
         type:"POST",
         data:fd,
         processData:false,
         contentType:false,
         success:()=>{
             Swal.fire('Success','Updated successfully','success')
-            .then(()=>location.href="{{ route('missions.index') }}");
+            .then(()=>location.href="{{ route('manage-missions.index') }}");
         }
     });
 });

@@ -85,15 +85,16 @@
                             </div>
 
                             <div class="form-group">
-                                Resolve the simple captcha below:
-                                <br><br>
-                                <strong>3 + 11 =</strong>
+                                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}">
+                                </div>
 
-                                <input name="captchaResult" class="form-control" style="width:30%">
-
-                                <input type="hidden" name="firstNumber" value="3">
-                                <input type="hidden" name="secondNumber" value="11">
+                                @if ($errors->has('g-recaptcha-response'))
+                                    <span class="text-danger">
+                                        {{ $errors->first('g-recaptcha-response') }}
+                                    </span>
+                                @endif
                             </div>
+
 
                             <button type="submit" class="btn btn-success">
                                 Submit
@@ -112,3 +113,4 @@
     </div>
 
 @endsection
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>

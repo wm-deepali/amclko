@@ -23,7 +23,7 @@
 
                     <button id="applyBulk" class="btn btn-secondary">Apply</button>
 
-                    <a href="{{ route('applications.create') }}" class="btn btn-primary ms-auto">
+                    <a href="{{ route('manage-applications.create') }}" class="btn btn-primary ms-auto">
                         + Add New
                     </a>
                 </div>
@@ -53,7 +53,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route('applications.index') }}",
+                url: "{{ route('manage-applications.index') }}",
                 data: function (d) {
                     d.status = $('#statusFilter').val();
                 }
@@ -86,7 +86,7 @@
                 return;
             }
 
-            $.post("{{ route('applications.bulk') }}", {
+            $.post("{{ route('manage-applications.bulk') }}", {
                 _token: "{{ csrf_token() }}",
                 ids: ids,
                 action: action
@@ -104,7 +104,7 @@
             }).then(res => {
                 if (res.isConfirmed) {
                     $.ajax({
-                        url: "{{ url('admin/applications') }}/" + id,
+                        url: "{{ url('manage-applications') }}/" + id,
                         type: "DELETE",
                         data: { _token: "{{ csrf_token() }}" },
                         success: () => table.ajax.reload()

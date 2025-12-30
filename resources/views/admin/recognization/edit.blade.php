@@ -53,7 +53,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Update</button>
-                    <a href="{{ route('recognizations.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-recognizations.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -74,14 +74,14 @@ $('#recEditForm').submit(function(e){
     fd.set('content', CKEDITOR.instances.editor.getData());
 
     $.ajax({
-        url:"{{ route('recognizations.update',$recognization->id) }}",
+        url:"{{ route('manage-recognizations.update',$recognization->id) }}",
         type:"POST",
         data:fd,
         processData:false,
         contentType:false,
         success:()=>{
             Swal.fire('Success','Updated successfully','success')
-            .then(()=>location.href="{{ route('recognizations.index') }}");
+            .then(()=>location.href="{{ route('manage-recognizations.index') }}");
         }
     });
 });

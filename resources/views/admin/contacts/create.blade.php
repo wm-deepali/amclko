@@ -54,7 +54,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Save</button>
-                    <a href="{{ route('contacts.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-contacts.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -72,14 +72,14 @@ $('#contactForm').submit(function(e){
     let fd = new FormData(this);
 
     $.ajax({
-        url: "{{ route('contacts.store') }}",
+        url: "{{ route('manage-contacts.store') }}",
         type: "POST",
         data: fd,
         processData:false,
         contentType:false,
         success: () => {
             Swal.fire('Success','Saved successfully','success')
-            .then(()=> location.href="{{ route('contacts.index') }}");
+            .then(()=> location.href="{{ route('manage-contacts.index') }}");
         }
     });
 });

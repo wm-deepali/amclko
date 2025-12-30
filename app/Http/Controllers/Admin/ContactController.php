@@ -32,7 +32,7 @@ class ContactController extends Controller
                 )
                 ->addColumn('action', fn ($r) =>
                     '
-                    <a href="'.route('contacts.edit',$r->id).'" class="btn btn-sm btn-info">Edit</a>
+                    <a href="'.route('manage-contacts.edit',$r->id).'" class="btn btn-sm btn-info">Edit</a>
                     <button class="btn btn-sm btn-danger delete" data-id="'.$r->id.'">Delete</button>
                     '
                 )
@@ -84,13 +84,15 @@ class ContactController extends Controller
     }
 
     /* ================= EDIT ================= */
-    public function edit(Contact $contact)
+    public function edit($id)
     {
+        $contact = Contact::findOrFail($id);
         return view('admin.contacts.edit', compact('contact'));
     }
 
-    public function update(Request $request, Contact $contact)
+    public function update(Request $request, $id)
     {
+        $contact = Contact::findOrFail($id);
         $request->validate([
             'title'  => 'required',
             'email'  => 'nullable|email',
@@ -132,8 +134,9 @@ class ContactController extends Controller
     }
 
     /* ================= DELETE ================= */
-    public function destroy(Contact $contact)
+    public function destroy($id)
     {
+        $contact = Contact::findOrFail($id);
         if ($contact->image) {
             Storage::disk('public')->delete([
                 $contact->image,

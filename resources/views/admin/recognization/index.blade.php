@@ -9,7 +9,7 @@
 
             <div class="d-flex justify-content-between mb-3">
                 <h5 class="card-title">Govt Recognization</h5>
-                <a href="{{ route('recognizations.create') }}" class="btn btn-primary">
+                <a href="{{ route('manage-recognizations.create') }}" class="btn btn-primary">
                     + Add
                 </a>
             </div>
@@ -38,7 +38,7 @@ $(function () {
     let table = $('#recognizationTable').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('recognizations.index') }}",
+        ajax: "{{ route('manage-recognizations.index') }}",
         columns: [
             {data: 'checkbox', orderable:false, searchable:false},
             {data: 'image', orderable:false, searchable:false},
@@ -60,7 +60,7 @@ $(function () {
         }).then(res=>{
             if(res.isConfirmed){
                 $.ajax({
-                    url:`/admin/recognizations/${id}`,
+                    url:`/manage-recognizations/${id}`,
                     type:'DELETE',
                     data:{_token:'{{ csrf_token() }}'},
                     success:()=>table.ajax.reload()

@@ -21,19 +21,25 @@ class VideoController extends Controller
             }
 
             return DataTables::of($query)
-                ->addColumn('checkbox', fn ($v) =>
-                    '<input type="checkbox" class="row_check" value="'.$v->id.'">'
+                ->addColumn(
+                    'checkbox',
+                    fn($v) =>
+                    '<input type="checkbox" class="row_check" value="' . $v->id . '">'
                 )
-                ->addColumn('status', fn ($v) =>
+                ->addColumn(
+                    'status',
+                    fn($v) =>
                     $v->status === 'active'
-                        ? '<span class="badge bg-success">Active</span>'
-                        : '<span class="badge bg-danger">Blocked</span>'
+                    ? '<span class="badge bg-success">Active</span>'
+                    : '<span class="badge bg-danger">Blocked</span>'
                 )
-                ->addColumn('action', fn ($v) =>
-                    '<a href="'.route('videos.edit',$v->id).'" class="btn btn-sm btn-info">Edit</a>
-                     <button class="btn btn-sm btn-danger delete" data-id="'.$v->id.'">Delete</button>'
+                ->addColumn(
+                    'action',
+                    fn($v) =>
+                    '<a href="' . route('manage-videos.edit', $v->id) . '" class="btn btn-sm btn-info">Edit</a>
+                     <button class="btn btn-sm btn-danger delete" data-id="' . $v->id . '">Delete</button>'
                 )
-                ->rawColumns(['checkbox','status','action'])
+                ->rawColumns(['checkbox', 'status', 'action'])
                 ->make(true);
         }
 
@@ -53,7 +59,7 @@ class VideoController extends Controller
         ]);
 
         Video::create([
-            'url'    => $request->url,
+            'url' => $request->url,
             'status' => 'active'
         ]);
 
@@ -61,20 +67,22 @@ class VideoController extends Controller
     }
 
     /* ================= EDIT ================= */
-    public function edit(Video $video)
+    public function edit($id)
     {
+        $video = Video::findOrFail($id);
         return view('admin.video.edit', compact('video'));
     }
 
-    public function update(Request $request, Video $video)
+    public function update(Request $request, $id)
     {
+        $video = Video::findOrFail($id);
         $request->validate([
-            'url'    => 'required|string',
+            'url' => 'required|string',
             'status' => 'required|in:active,block'
         ]);
 
         $video->update([
-            'url'    => $request->url,
+            'url' => $request->url,
             'status' => $request->status
         ]);
 
@@ -82,8 +90,9 @@ class VideoController extends Controller
     }
 
     /* ================= DELETE ================= */
-    public function destroy(Video $video)
+    public function destroy($id)
     {
+        $video = Video::findOrFail($id);
         $video->delete();
         return response()->json(['success' => true]);
     }
@@ -92,9 +101,9 @@ class VideoController extends Controller
     public function bulk(Request $request)
     {
         if ($request->action === 'delete') {
-            Video::whereIn('id',$request->ids)->delete();
+            Video::whereIn('id', $request->ids)->delete();
         } else {
-            Video::whereIn('id',$request->ids)
+            Video::whereIn('id', $request->ids)
                 ->update(['status' => $request->action]);
         }
 

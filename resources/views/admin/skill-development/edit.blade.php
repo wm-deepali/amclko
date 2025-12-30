@@ -53,7 +53,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Update</button>
-                    <a href="{{ route('skill-dev.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-skill-dev.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -74,14 +74,14 @@ $('#skillEditForm').submit(function(e){
     fd.set('content', CKEDITOR.instances.editor.getData());
 
     $.ajax({
-        url:"{{ route('skill-dev.update',$skill) }}",
+        url:"{{ route('manage-skill-dev.update',$skill) }}",
         type:"POST",
         data:fd,
         processData:false,
         contentType:false,
         success:()=>{
             Swal.fire('Success','Updated successfully','success')
-            .then(()=>location.href="{{ route('skill-dev.index') }}");
+            .then(()=>location.href="{{ route('manage-skill-dev.index') }}");
         }
     });
 });

@@ -29,7 +29,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Save</button>
-                    <a href="{{ route('missions.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-missions.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -50,14 +50,14 @@ $('#missionCreateForm').submit(function(e){
     fd.set('content', CKEDITOR.instances.editor.getData());
 
     $.ajax({
-        url:"{{ route('missions.store') }}",
+        url:"{{ route('manage-missions.store') }}",
         type:"POST",
         data:fd,
         processData:false,
         contentType:false,
         success:()=>{
             Swal.fire('Success','Added successfully','success')
-            .then(()=>location.href="{{ route('missions.index') }}");
+            .then(()=>location.href="{{ route('manage-missions.index') }}");
         }
     });
 });

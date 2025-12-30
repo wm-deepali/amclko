@@ -27,7 +27,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Add Slider</button>
-                    <a href="{{ route('sliders.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-sliders.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
 
             </form>
@@ -45,14 +45,14 @@ $('#sliderForm').submit(function(e){
     let formData = new FormData(this);
 
     $.ajax({
-        url: "{{ route('sliders.store') }}",
+        url: "{{ route('manage-sliders.store') }}",
         method: "POST",
         data: formData,
         processData: false,
         contentType: false,
         success: function () {
             Swal.fire('Success','Slider added successfully','success')
-                .then(() => window.location.href = "{{ route('sliders.index') }}");
+                .then(() => window.location.href = "{{ route('manage-sliders.index') }}");
         },
         error: function (xhr) {
             let msg = '';

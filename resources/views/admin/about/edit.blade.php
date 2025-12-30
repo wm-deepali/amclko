@@ -54,7 +54,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Update</button>
-                    <a href="{{ route('abouts.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-abouts.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -75,14 +75,14 @@ $('#aboutEditForm').submit(function(e){
     fd.set('content', CKEDITOR.instances.editor.getData());
 
     $.ajax({
-        url: "{{ route('abouts.update',$about->id) }}",
+        url: "{{ route('manage-abouts.update',$about->id) }}",
         type: "POST",
         data: fd,
         processData:false,
         contentType:false,
         success: () => {
             Swal.fire('Success','Updated successfully','success')
-            .then(()=>location.href="{{ route('abouts.index') }}");
+            .then(()=>location.href="{{ route('manage-abouts.index') }}");
         },
         error: xhr => {
             let msg='';

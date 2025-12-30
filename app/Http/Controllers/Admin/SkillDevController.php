@@ -18,24 +18,32 @@ class SkillDevController extends Controller
             $query = SkillDev::latest();
 
             return DataTables::of($query)
-                ->addColumn('checkbox', fn($r) =>
-                    '<input type="checkbox" class="row_check" value="'.$r->id.'">'
+                ->addColumn(
+                    'checkbox',
+                    fn($r) =>
+                    '<input type="checkbox" class="row_check" value="' . $r->id . '">'
                 )
-                ->addColumn('image', fn($r) =>
+                ->addColumn(
+                    'image',
+                    fn($r) =>
                     $r->image
-                        ? '<img src="'.asset('storage/'.$r->image).'" height="60">'
-                        : ''
+                    ? '<img src="' . asset('storage/' . $r->image) . '" height="60">'
+                    : ''
                 )
-                ->addColumn('status', fn($r) =>
+                ->addColumn(
+                    'status',
+                    fn($r) =>
                     $r->status === 'active'
-                        ? '<span class="badge bg-success">Active</span>'
-                        : '<span class="badge bg-danger">Blocked</span>'
+                    ? '<span class="badge bg-success">Active</span>'
+                    : '<span class="badge bg-danger">Blocked</span>'
                 )
-                ->addColumn('action', fn($r) =>
-                    '<a href="'.route('skill-dev.edit',$r->id).'" class="btn btn-sm btn-info">Edit</a>
-                     <button class="btn btn-sm btn-danger delete" data-id="'.$r->id.'">Delete</button>'
+                ->addColumn(
+                    'action',
+                    fn($r) =>
+                    '<a href="' . route('manage-skill-dev.edit', $r->id) . '" class="btn btn-sm btn-info">Edit</a>
+                     <button class="btn btn-sm btn-danger delete" data-id="' . $r->id . '">Delete</button>'
                 )
-                ->rawColumns(['checkbox','image','status','action'])
+                ->rawColumns(['checkbox', 'image', 'status', 'action'])
                 ->make(true);
         }
 
@@ -51,15 +59,15 @@ class SkillDevController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'   => 'required',
+            'title' => 'required',
             'content' => 'nullable',
-            'image'   => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:2048',
         ]);
 
         $data = [
-            'title'   => $request->title,
+            'title' => $request->title,
             'content' => $request->content,
-            'status'  => 'active',
+            'status' => 'active',
         ];
 
         if ($request->hasFile('image')) {
@@ -77,24 +85,25 @@ class SkillDevController extends Controller
     }
 
     /* ================= EDIT ================= */
-    public function edit( $id)
+    public function edit($id)
     {
         $skill = SkillDev::find($id);
         return view('admin.skill-development.edit', compact('skill'));
     }
 
-    public function update(Request $request, SkillDev $skill)
+    public function update(Request $request, $id)
     {
+        $skill = SkillDev::find($id);
         $request->validate([
-            'title'   => 'required',
+            'title' => 'required',
             'content' => 'nullable',
-            'image'   => 'nullable|image|max:2048',
-            'status'  => 'required|in:active,block'
+            'image' => 'nullable|image|max:2048',
+            'status' => 'required|in:active,block'
         ]);
 
-        $skill->title   = $request->title;
+        $skill->title = $request->title;
         $skill->content = $request->content;
-        $skill->status  = $request->status;
+        $skill->status = $request->status;
 
         if ($request->hasFile('image')) {
 
@@ -120,8 +129,9 @@ class SkillDevController extends Controller
     }
 
     /* ================= DELETE ================= */
-    public function destroy(SkillDev $skill)
+    public function destroy($id)
     {
+        $skill = SkillDev::find($id);
         if ($skill->image) {
             Storage::disk('public')->delete([
                 $skill->image,
@@ -156,25 +166,30 @@ class SkillDevController extends Controller
     /* ================= IMAGE HELPER ================= */
     private function saveImage($file, $dir, $w, $h)
     {
-        $ext  = $file->getClientOriginalExtension();
-        $name = 'affiliation_'.time().'.'.$ext;
+        $ext = $file->getClientOriginalExtension();
+        $name = 'affiliation_' . time() . '.' . $ext;
 
         // original
         $file->storeAs($dir, $name, 'public');
 
         // thumb
-        $src   = imagecreatefromstring(file_get_contents($file));
+        $src = imagecreatefromstring(file_get_contents($file));
         $thumb = imagecreatetruecolor($w, $h);
 
         imagecopyresampled(
-            $thumb, $src,
-            0,0,0,0,
-            $w,$h,
+            $thumb,
+            $src,
+            0,
+            0,
+            0,
+            0,
+            $w,
+            $h,
             imagesx($src),
             imagesy($src)
         );
 
-        Storage::disk('public')->makeDirectory($dir.'/thumb');
+        Storage::disk('public')->makeDirectory($dir . '/thumb');
 
         imagejpeg(
             $thumb,

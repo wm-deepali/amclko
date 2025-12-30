@@ -30,7 +30,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Save</button>
-                    <a href="{{ route('skill-dev.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-skill-dev.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -51,14 +51,14 @@ $('#skillForm').submit(function(e){
     fd.set('content', CKEDITOR.instances.editor.getData());
 
     $.ajax({
-        url:"{{ route('skill-dev.store') }}",
+        url:"{{ route('manage-skill-dev.store') }}",
         type:"POST",
         data:fd,
         processData:false,
         contentType:false,
         success:()=>{
             Swal.fire('Success','Added successfully','success')
-            .then(()=>location.href="{{ route('skill-dev.index') }}");
+            .then(()=>location.href="{{ route('manage-skill-dev.index') }}");
         }
     });
 });

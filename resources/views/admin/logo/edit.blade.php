@@ -57,7 +57,7 @@
                     <button type="submit" class="btn btn-primary">
                         Update Logo
                     </button>
-                    <a href="{{ route('logos.index') }}" class="btn btn-secondary">
+                    <a href="{{ route('manage-logos.index') }}" class="btn btn-secondary">
                         Cancel
                     </a>
                 </div>
@@ -76,14 +76,14 @@ $('#logoEditForm').on('submit', function(e){
     let formData = new FormData(this);
 
     $.ajax({
-        url: "{{ route('logos.update', $logo->id) }}",
+        url: "{{ route('manage-logos.update', $logo->id) }}",
         method: "POST",
         data: formData,
         processData: false,
         contentType: false,
         success: function () {
             Swal.fire('Success','Logo updated successfully','success')
-                .then(() => window.location.href = "{{ route('logos.index') }}");
+                .then(() => window.location.href = "{{ route('manage-logos.index') }}");
         },
         error: function (xhr) {
             let msg = '';

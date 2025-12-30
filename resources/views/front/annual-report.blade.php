@@ -1,5 +1,7 @@
 @extends('front.partials.app')
 
+@section('content')
+
 <style>
     .annual-report-section {
         height: 100vh !important;
@@ -54,37 +56,43 @@
     .report-card:hover .report-title {
         color: #e63946;
     }
+
+    .empty-report {
+        text-align: center;
+        color: #777;
+        grid-column: 1 / -1;
+        font-size: 16px;
+    }
 </style>
-@section('content')
 
-    <div class="annual-report-section">
-        <div class="container">
-            <h2 class="page-title ">Annual Reports</h2>
+<div class="annual-report-section">
+    <div class="container">
 
-            <div class="report-grid">
+        <h2 class="page-title">Annual Reports</h2>
 
-                <!-- CARD 1 -->
-                <a href="{{ asset('reports/2022-23 annual report.pdf') }}" target="_blank" class="report-card">
-                    <img src="{{ asset('reports/pdf.png') }}" class="report-icon" alt="PDF Icon">
-                    <h3 class="report-title">Annual Report for Year 2022 - 2023</h3>
+        <div class="report-grid">
+
+            @forelse($reports as $report)
+                <a href="{{ asset('storage/'.$report->pdf) }}"
+                   target="_blank"
+                   class="report-card">
+
+                    <img src="{{ asset('images/pdf.png') }}"
+                         class="report-icon"
+                         alt="PDF">
+
+                    <h3 class="report-title">
+                        {{ $report->title }}
+                    </h3>
                 </a>
+            @empty
+                <div class="empty-report">
+                    No annual reports available.
+                </div>
+            @endforelse
 
-                <!-- CARD 2 -->
-                <a href="{{ asset('reports/Annual report 23-24 (1).pdf') }}" target="_blank" class="report-card">
-                    <img src="{{ asset('reports/pdf.png') }}" class="report-icon" alt="PDF Icon">
-                    <h3 class="report-title">Annual Report for Year 2023 - 2024</h3>
-                </a>
-
-                <!-- CARD 3 -->
-                <a href="{{ asset('reports/Annual report 2024-25 (1) (1).pdf') }}" target="_blank" class="report-card">
-                    <img src="{{ asset('reports/pdf.png') }}" class="report-icon" alt="PDF Icon">
-                    <h3 class="report-title">Annual Report for Year 2024 - 2025</h3>
-                </a>
-
-
-
-            </div>
         </div>
     </div>
+</div>
 
 @endsection

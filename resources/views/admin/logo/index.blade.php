@@ -13,7 +13,7 @@
                     <option value="block">Blocked</option>
                 </select>
 
-                <a href="{{ route('logos.create') }}" class="btn btn-primary ms-auto">+ Add Logo</a>
+                <a href="{{ route('manage-logos.create') }}" class="btn btn-primary ms-auto">+ Add Logo</a>
             </div>
 
             <table class="table table-bordered" id="logoTable">
@@ -40,7 +40,7 @@
             processing: true,   // ✅ REQUIRED
             serverSide: true,
             ajax: {
-                url: "{{ route('logos.index') }}",
+                url: "{{ route('manage-logos.index') }}",
                 data: function (d) {
                     d.status = $('#filter').val();
                 }
@@ -70,7 +70,7 @@
             $('.row_check:checked').each((i, e) => ids.push(e.value));
             if (!ids.length) return alert('Select rows');
 
-            $.post("{{ route('logos.bulk') }}", {
+            $.post("{{ route('manage-logos.bulk') }}", {
                 ids: ids,
                 action: 'delete',
                 _token: "{{ csrf_token() }}"
@@ -80,7 +80,7 @@
         $(document).on('click', '.delete', function () {
             if (!confirm('Delete?')) return;
             $.ajax({
-                url: '/admin/logos/' + $(this).data('id'),
+                url: '/manage-logos/' + $(this).data('id'),
                 type: 'DELETE',
                 data: { _token: "{{ csrf_token() }}" },
                 success: () => table.ajax.reload()

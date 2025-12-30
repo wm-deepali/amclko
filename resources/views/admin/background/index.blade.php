@@ -12,7 +12,7 @@
                     <option value="block">Blocked</option>
                 </select>
 
-                <a href="{{ route('backgrounds.create') }}" class="btn btn-primary ms-auto">+ Add</a>
+                <a href="{{ route('manage-backgrounds.create') }}" class="btn btn-primary ms-auto">+ Add</a>
             </div>
 
             <table class="table table-bordered" id="bgTable">
@@ -38,7 +38,7 @@
             processing: true,   // ✅ REQUIRED
             serverSide: true,
             ajax: {
-                url: "{{ route('backgrounds.index') }}",
+                url: "{{ route('manage-backgrounds.index') }}",
                 data: function (d) {
                     d.status = $('#filter').val();
                 }
@@ -64,10 +64,35 @@
             $('.row_check:checked').each((i, e) => ids.push(e.value));
             if (!ids.length) return alert('Select rows');
 
-            $.post("{{ route('backgrounds.bulk') }}",
+            $.post("{{ route('manage-backgrounds.bulk') }}",
                 { ids, action: 'delete', _token: "{{ csrf_token() }}" },
                 () => table.ajax.reload()
             );
         });
+
+        // SINGLE DELETE
+        $(document).on('click', '.delete', function () {
+
+            if (!confirm('Are you sure you want to delete this background?')) {
+                return;
+            }
+
+            let id = $(this).data('id');
+
+            $.ajax({
+                url: "{{ url('/manage-backgrounds') }}/" + id,
+                type: 'DELETE',
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function () {
+                    table.ajax.reload(null, false);
+                },
+                error: function () {
+                    alert('Delete failed');
+                }
+            });
+        });
+
     </script>
 @endpush

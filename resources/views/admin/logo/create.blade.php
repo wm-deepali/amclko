@@ -30,7 +30,7 @@
                     <button type="submit" class="btn btn-primary">
                         Add Logo
                     </button>
-                    <a href="{{ route('logos.index') }}" class="btn btn-secondary">
+                    <a href="{{ route('manage-logos.index') }}" class="btn btn-secondary">
                         Cancel
                     </a>
                 </div>
@@ -49,14 +49,14 @@ $('#logoForm').on('submit', function(e){
     let formData = new FormData(this);
 
     $.ajax({
-        url: "{{ route('logos.store') }}",
+        url: "{{ route('manage-logos.store') }}",
         method: "POST",
         data: formData,
         processData: false,
         contentType: false,
         success: function () {
             Swal.fire('Success','Logo added successfully','success')
-                .then(() => window.location.href = "{{ route('logos.index') }}");
+                .then(() => window.location.href = "{{ route('manage-logos.index') }}");
         },
         error: function (xhr) {
             let msg = '';

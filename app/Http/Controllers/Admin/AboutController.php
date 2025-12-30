@@ -22,11 +22,14 @@ class AboutController extends Controller
             }
 
             return DataTables::of($query)
-                ->addColumn('checkbox', fn ($r) =>
-                    '<input type="checkbox" class="row_check" value="'.$r->id.'">'
+                ->addColumn(
+                    'checkbox',
+                    fn($r) =>
+                    '<input type="checkbox" class="row_check" value="' . $r->id . '">'
                 )
                 ->addColumn('image', function ($r) {
-                    if (!$r->image) return '';
+                    if (!$r->image)
+                        return '';
 
                     $thumb = str_replace(
                         'abouts/',
@@ -34,20 +37,24 @@ class AboutController extends Controller
                         $r->image
                     );
 
-                    return '<img src="'.asset('storage/'.$thumb).'" height="60">';
+                    return '<img src="' . asset('storage/' . $thumb) . '" height="60">';
                 })
-                ->addColumn('status', fn ($r) =>
+                ->addColumn(
+                    'status',
+                    fn($r) =>
                     $r->status === 'active'
-                        ? '<span class="badge bg-success">Active</span>'
-                        : '<span class="badge bg-danger">Blocked</span>'
+                    ? '<span class="badge bg-success">Active</span>'
+                    : '<span class="badge bg-danger">Blocked</span>'
                 )
-                ->addColumn('action', fn ($r) =>
+                ->addColumn(
+                    'action',
+                    fn($r) =>
                     '
-                        <a href="'.route('abouts.edit',$r->id).'" class="btn btn-sm btn-info">Edit</a>
-                        <button class="btn btn-sm btn-danger delete" data-id="'.$r->id.'">Delete</button>
+                        <a href="' . route('manage-abouts.edit', $r->id) . '" class="btn btn-sm btn-info">Edit</a>
+                        <button class="btn btn-sm btn-danger delete" data-id="' . $r->id . '">Delete</button>
                     '
                 )
-                ->rawColumns(['checkbox','image','status','action'])
+                ->rawColumns(['checkbox', 'image', 'status', 'action'])
                 ->make(true);
         }
 
@@ -63,15 +70,15 @@ class AboutController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'   => 'required',
+            'title' => 'required',
             'content' => 'required',
-            'image'   => 'nullable|image|max:2048'
+            'image' => 'nullable|image|max:2048'
         ]);
 
         $data = [
-            'title'   => $request->title,
+            'title' => $request->title,
             'content' => $request->content,
-            'status'  => 'active'
+            'status' => 'active'
         ];
 
         if ($request->hasFile('image')) {
@@ -89,23 +96,25 @@ class AboutController extends Controller
     }
 
     /* ================= EDIT ================= */
-    public function edit(About $about)
+    public function edit($id)
     {
+        $about = About::findOrFail($id);
         return view('admin.about.edit', compact('about'));
     }
 
-    public function update(Request $request, About $about)
+    public function update(Request $request, $id)
     {
+        $about = About::findOrFail($id);
         $request->validate([
-            'title'   => 'required',
+            'title' => 'required',
             'content' => 'required',
-            'status'  => 'required|in:active,block',
-            'image'   => 'nullable|image|max:2048'
+            'status' => 'required|in:active,block',
+            'image' => 'nullable|image|max:2048'
         ]);
 
-        $about->title   = $request->title;
+        $about->title = $request->title;
         $about->content = $request->content;
-        $about->status  = $request->status; // OLD PHP MATCH
+        $about->status = $request->status; // OLD PHP MATCH
 
         if ($request->hasFile('image')) {
 
@@ -130,8 +139,9 @@ class AboutController extends Controller
     }
 
     /* ================= DELETE ================= */
-    public function destroy(About $about)
+    public function destroy($id)
     {
+        $about = About::findOrFail($id);
         if ($about->image) {
             Storage::disk('public')->delete([
                 $about->image,
@@ -159,7 +169,7 @@ class AboutController extends Controller
             });
         }
 
-        if (in_array($request->action, ['active','block'])) {
+        if (in_array($request->action, ['active', 'block'])) {
             About::whereIn('id', $request->ids)
                 ->update(['status' => $request->action]);
         }
@@ -170,26 +180,30 @@ class AboutController extends Controller
     /* ================= IMAGE HANDLER (SAME AS SLIDER) ================= */
     private function saveImage($file, $dir, $w, $h)
     {
-        $ext  = $file->getClientOriginalExtension();
+        $ext = $file->getClientOriginalExtension();
         $name = 'about_' . time() . '.' . $ext;
 
         // SAVE ORIGINAL
         $file->storeAs($dir, $name, 'public');
 
         // CREATE THUMB (OLD PHP STYLE)
-        $src   = imagecreatefromstring(file_get_contents($file));
+        $src = imagecreatefromstring(file_get_contents($file));
         $thumb = imagecreatetruecolor($w, $h);
 
         imagecopyresampled(
             $thumb,
             $src,
-            0, 0, 0, 0,
-            $w, $h,
+            0,
+            0,
+            0,
+            0,
+            $w,
+            $h,
             imagesx($src),
             imagesy($src)
         );
 
-        Storage::disk('public')->makeDirectory($dir.'/thumb');
+        Storage::disk('public')->makeDirectory($dir . '/thumb');
 
         imagejpeg(
             $thumb,

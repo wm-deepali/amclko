@@ -367,6 +367,7 @@
                 <li><a href="{{ url('vision-mission') }}">Vision & Mission</a></li>
                 <li><a href="{{ asset('images/aims.jpg') }}" target="_blank">Aims & Objectives</a></li>
                 <li><a href="{{ url('view-certificate') }}">View Certification</a></li>
+                <li><a href="{{ route('faqs') }}">FAQs</a></li>
               </ul>
             </li>
 
@@ -382,6 +383,10 @@
 
             <li>
               <a href="{{ url('program') }}" class="amc-menu-link">Programmes</a>
+            </li>
+
+            <li>
+              <a href="{{ route('blogs') }}" class="amc-menu-link">Blogs</a>
             </li>
 
             <li>
@@ -427,4 +432,3 @@
       $('.simple-marquee-container').SimpleMarquee();
     });
   </script>
-

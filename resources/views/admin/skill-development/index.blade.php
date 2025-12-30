@@ -9,7 +9,7 @@
 
             <div class="d-flex justify-content-between mb-3">
                 <h5 class="card-title">Skill Development</h5>
-                <a href="{{ route('skill-dev.create') }}" class="btn btn-primary">
+                <a href="{{ route('manage-skill-dev.create') }}" class="btn btn-primary">
                     + Add
                 </a>
             </div>
@@ -38,7 +38,7 @@ $(function () {
     let table = $('#skillTable').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('skill-dev.index') }}",
+        ajax: "{{ route('manage-skill-dev.index') }}",
         columns: [
             {data:'checkbox',orderable:false,searchable:false},
             {data:'image',orderable:false,searchable:false},
@@ -60,7 +60,7 @@ $(function () {
         }).then(res=>{
             if(res.isConfirmed){
                 $.ajax({
-                    url:`/admin/skill-dev/${id}`,
+                    url:`/manage-skill-dev/${id}`,
                     type:'DELETE',
                     data:{_token:'{{ csrf_token() }}'},
                     success:()=>table.ajax.reload()

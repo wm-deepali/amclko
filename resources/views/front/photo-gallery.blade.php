@@ -2,54 +2,123 @@
 
 @section('content')
 
-<!--------------------------Our Courses Start------------------------------>
-<div class="about-banner">
-	<img src="{{ asset('images/photo-gallery.jpg') }}" class="img-responsive"/>
-</div>
+<style>
+    .gallery-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        margin-bottom: 40px;
+    }
 
-<div class="about-title"></div>
+    .gallery-filter-btn {
+        padding: 10px 22px;
+        border-radius: 30px;
+        border: 1px solid #ddd;
+        background: #fff;
+        color: #333;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .gallery-filter-btn.active,
+    .gallery-filter-btn:hover {
+        background: #e63946;
+        color: #fff;
+        border-color: #e63946;
+    }
+
+    .gallery-item {
+        display: none;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .gallery-item.show {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+</style>
+
+<!-------------------------- PHOTO GALLERY START ------------------------------>
+<div class="about-banner">
+    <img src="{{ asset('images/photo-gallery.jpg') }}" class="img-responsive"/>
+</div>
 
 <div class="communite-block mt-5">
     <div class="container">
-        <div class="row MT40 MB10 justify-content-center" id="galleryContainer">
-            <!-- Images will load here by JS -->
+
+        {{-- ================= FILTER BUTTONS ================= --}}
+        <div class="gallery-filters">
+            <button class="gallery-filter-btn active" data-filter="all">
+                All
+            </button>
+
+            @foreach($categories as $category)
+                <button class="gallery-filter-btn"
+                        data-filter="cat{{ $category->id }}">
+                    {{ $category->title }}
+                </button>
+            @endforeach
         </div>
+
+        {{-- ================= GALLERY GRID ================= --}}
+        <div class="row justify-content-center">
+
+            @foreach($categories as $category)
+                @foreach($category->galleries as $gallery)
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4 gallery-item cat{{ $category->id }} show">
+                        <div class="picture-border text-center">
+                            <a href="{{ asset('storage/'.$gallery->image) }}"
+                               data-lightbox="gallery"
+                               data-title="{{ $category->title }}">
+
+                                <img class="img-responsive img-rounded"
+                                     src="{{ asset('storage/'.str_replace(
+                                        'gallery/',
+                                        'gallery/thumb/',
+                                        $gallery->image
+                                     )) }}"
+                                     alt="{{ $category->title }}">
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            @endforeach
+
+        </div>
+
     </div>
 </div>
 
 <script src="{{ asset('assets/js/lightbox-plus-jquery.min.js') }}"></script>
 
 <script>
-const images = [
-  "1.jpeg","2.jpeg","3.jpeg","4.jpeg","5.jpeg","6.jpeg","7.jpeg","8.jpeg","9.jpeg","10.jpeg",
-  "11.jpeg","12.jpeg","13.jpeg","14.jpeg","15.jpeg","16.jpeg","17.jpeg","18.jpeg","19.jpeg","20.jpeg",
-  "21.jpeg","22.jpeg","23.jpeg","24.jpeg","25.jpeg","26.jpeg","27.jpeg","28.jpeg","29.jpeg","30.jpeg",
-  "31.jpeg","32.jpeg","33.jpeg","34.jpeg","35.jpeg","36.jpeg","37.jpeg","38.jpeg","39.jpeg","40.jpeg",
-  "41.jpeg","42.jpeg","43.jpeg","44.jpeg","45.jpeg","46.jpeg","47.jpeg"
-];
+    const buttons = document.querySelectorAll('.gallery-filter-btn');
+    const items   = document.querySelectorAll('.gallery-item');
 
-const container = document.getElementById("galleryContainer");
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
 
-images.forEach(img => {
-    container.innerHTML += `
-        <div class="col-lg-3 col-md-6 col-sm-12 text-center">
-            <div class="picture-border">
-                <a class="example-image-link"
-                   href="{{ asset('gallery') }}/${img}"
-                   data-lightbox="example-set"
-                   data-title="Academy of Mass Communication">
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
 
-                    <img class="example-image img-rounded img-responsive"
-                         width="270px" height="200px"
-                         src="{{ asset('gallery') }}/${img}"
-                         alt=""/>
-                </a>
-            </div>
-        </div>
-    `;
-});
+            const filter = btn.dataset.filter;
+
+            items.forEach(item => {
+                item.classList.remove('show');
+
+                if (filter === 'all' || item.classList.contains(filter)) {
+                    setTimeout(() => item.classList.add('show'), 50);
+                }
+            });
+        });
+    });
 </script>
-
-<!--------------------------Our Courses End------------------------------>
+<!-------------------------- PHOTO GALLERY END ------------------------------>
 
 @endsection

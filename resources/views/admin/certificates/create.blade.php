@@ -20,7 +20,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Add</button>
-                    <a href="{{ route('certificates.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-certificates.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -37,14 +37,14 @@ $('#createForm').submit(function(e){
     let fd = new FormData(this);
 
     $.ajax({
-        url:"{{ route('certificates.store') }}",
+        url:"{{ route('manage-certificates.store') }}",
         type:"POST",
         data:fd,
         processData:false,
         contentType:false,
         success:()=>{
             Swal.fire('Success','Image added','success')
-                .then(()=>location.href="{{ route('certificates.index') }}");
+                .then(()=>location.href="{{ route('manage-certificates.index') }}");
         }
     });
 });

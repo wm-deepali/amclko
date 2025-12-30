@@ -21,22 +21,30 @@ class ApplicationController extends Controller
             }
 
             return DataTables::of($query)
-                ->addColumn('checkbox', fn($r) =>
-                    '<input type="checkbox" class="row_check" value="'.$r->id.'">'
+                ->addColumn(
+                    'checkbox',
+                    fn($r) =>
+                    '<input type="checkbox" class="row_check" value="' . $r->id . '">'
                 )
-                ->addColumn('image', fn($r) =>
-                    '<img src="'.asset('storage/'.$r->image).'" height="60">'
+                ->addColumn(
+                    'image',
+                    fn($r) =>
+                    '<img src="' . asset('storage/' . $r->image) . '" height="60">'
                 )
-                ->addColumn('status', fn($r) =>
+                ->addColumn(
+                    'status',
+                    fn($r) =>
                     $r->status === 'active'
-                        ? '<span class="badge bg-success">Active</span>'
-                        : '<span class="badge bg-danger">Blocked</span>'
+                    ? '<span class="badge bg-success">Active</span>'
+                    : '<span class="badge bg-danger">Blocked</span>'
                 )
-                ->addColumn('action', fn($r) =>
-                    '<a href="'.route('applications.edit',$r->id).'" class="btn btn-sm btn-info">Edit</a>
-                     <button class="btn btn-sm btn-danger delete" data-id="'.$r->id.'">Delete</button>'
+                ->addColumn(
+                    'action',
+                    fn($r) =>
+                    '<a href="' . route('manage-applications.edit', $r->id) . '" class="btn btn-sm btn-info">Edit</a>
+                     <button class="btn btn-sm btn-danger delete" data-id="' . $r->id . '">Delete</button>'
                 )
-                ->rawColumns(['checkbox','image','status','action'])
+                ->rawColumns(['checkbox', 'image', 'status', 'action'])
                 ->make(true);
         }
 
@@ -70,24 +78,26 @@ class ApplicationController extends Controller
 
         Application::create($data);
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= EDIT ================= */
-    public function edit(Application $application)
+    public function edit($id)
     {
+        $application = Application::findOrFail($id);
         return view('admin.applications.edit', compact('application'));
     }
 
-    public function update(Request $request, Application $application)
+    public function update(Request $request, $id)
     {
+        $application = Application::findOrFail($id);
         $request->validate([
-            'title'  => 'required',
+            'title' => 'required',
             'status' => 'required|in:active,block',
-            'image'  => 'nullable|image|max:4096'
+            'image' => 'nullable|image|max:4096'
         ]);
 
-        $application->fill($request->only('title','status'));
+        $application->fill($request->only('title', 'status'));
 
         if ($request->hasFile('image')) {
             if ($application->image) {
@@ -107,12 +117,13 @@ class ApplicationController extends Controller
 
         $application->save();
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= DELETE ================= */
-    public function destroy(Application $application)
+    public function destroy($id)
     {
+        $application = Application::findOrFail($id);
         if ($application->image) {
             Storage::disk('public')->delete([
                 $application->image,
@@ -122,14 +133,14 @@ class ApplicationController extends Controller
 
         $application->delete();
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= BULK ================= */
     public function bulk(Request $request)
     {
         if ($request->action === 'delete') {
-            Application::whereIn('id',$request->ids)->get()->each(function ($a) {
+            Application::whereIn('id', $request->ids)->get()->each(function ($a) {
                 if ($a->image) {
                     Storage::disk('public')->delete([
                         $a->image,
@@ -140,34 +151,40 @@ class ApplicationController extends Controller
             });
         }
 
-        if (in_array($request->action,['active','block'])) {
-            Application::whereIn('id',$request->ids)
-                ->update(['status'=>$request->action]);
+        if (in_array($request->action, ['active', 'block'])) {
+            Application::whereIn('id', $request->ids)
+                ->update(['status' => $request->action]);
         }
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= IMAGE HANDLER ================= */
     private function saveImage($file, $dir, $w, $h)
     {
-        $name = 'application_'.time().'.'.$file->getClientOriginalExtension();
+        $name = 'application_' . time() . '.' . $file->getClientOriginalExtension();
 
         // original
         $file->storeAs($dir, $name, 'public');
 
         // thumb
-        $src   = imagecreatefromstring(file_get_contents($file));
+        $src = imagecreatefromstring(file_get_contents($file));
         $thumb = imagecreatetruecolor($w, $h);
 
         imagecopyresampled(
-            $thumb, $src,
-            0, 0, 0, 0,
-            $w, $h,
-            imagesx($src), imagesy($src)
+            $thumb,
+            $src,
+            0,
+            0,
+            0,
+            0,
+            $w,
+            $h,
+            imagesx($src),
+            imagesy($src)
         );
 
-        Storage::disk('public')->makeDirectory($dir.'/thumb');
+        Storage::disk('public')->makeDirectory($dir . '/thumb');
 
         imagejpeg(
             $thumb,

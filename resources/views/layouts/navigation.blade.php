@@ -18,7 +18,8 @@
 
     {{-- ================= LOGO ================= --}}
     <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('logos.*') ? 'active' : '' }}" href="{{ route('logos.index') }}">
+        <a class="nav-link {{ request()->routeIs('manage-logos.*') ? 'active' : '' }}"
+            href="{{ route('manage-logos.index') }}">
             <svg class="nav-icon">
                 <use xlink:href="{{ asset('icons/coreui.svg#cil-image') }}"></use>
             </svg>
@@ -29,7 +30,8 @@
 
     {{-- ================= SLIDER ================= --}}
     <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('sliders.*') ? 'active' : '' }}" href="{{ route('sliders.index') }}">
+        <a class="nav-link {{ request()->routeIs('manage-sliders.*') ? 'active' : '' }}"
+            href="{{ route('manage-sliders.index') }}">
             <svg class="nav-icon">
                 <use xlink:href="{{ asset('icons/coreui.svg#cil-image') }}"></use>
             </svg>
@@ -40,8 +42,8 @@
 
     {{-- ================= BACKGROUND PAGE ================= --}}
     <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('backgrounds.*') ? 'active' : '' }}"
-            href="{{ route('backgrounds.index') }}">
+        <a class="nav-link {{ request()->routeIs('manage-backgrounds.*') ? 'active' : '' }}"
+            href="{{ route('manage-backgrounds.index') }}">
             <svg class="nav-icon">
                 <use xlink:href="{{ asset('icons/coreui.svg#cil-wallpaper') }}"></use>
             </svg>
@@ -51,7 +53,8 @@
 
     {{-- ================= COURSES PAGE ================= --}}
     <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('manage-courses.*') ? 'active' : '' }}" href="{{ route('manage-courses.index') }}">
+        <a class="nav-link {{ request()->routeIs('manage-courses.*') ? 'active' : '' }}"
+            href="{{ route('manage-courses.index') }}">
             <svg class="nav-icon">
                 <use xlink:href="{{ asset('icons/coreui.svg#cil-library') }}"></use>
             </svg>
@@ -60,20 +63,81 @@
     </li>
 
 
-    {{-- ================= PICTURE GALLERY ================= --}}
+    {{-- ================= PROGRAMS ================= --}}
     <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('galleries.*') ? 'active' : '' }}"
-            href="{{ route('galleries.index') }}">
+        <a class="nav-link {{ request()->routeIs('manage-programs.*') ? 'active' : '' }}"
+            href="{{ route('manage-programs.index') }}">
+            <svg class="nav-icon">
+                <use xlink:href="{{ asset('icons/coreui.svg#cil-notes') }}"></use>
+            </svg>
+            Programs Management
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('manage-blogs.*') ? 'active' : '' }}"
+            href="{{ route('manage-blogs.index') }}">
+            <svg class="nav-icon">
+                <use xlink:href="{{ asset('icons/coreui.svg#cil-description') }}"></use>
+            </svg>
+            Blog Management
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('manage-faqs.*') ? 'active' : '' }}"
+            href="{{ route('manage-faqs.index') }}">
+            <svg class="nav-icon">
+                <use xlink:href="{{ asset('icons/coreui.svg#cil-question-mark') }}"></use>
+            </svg>
+            FAQ Management
+        </a>
+    </li>
+
+
+    {{-- ================= ANNUAL REPORT ================= --}}
+    <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('manage-annual-reports.*') ? 'active' : '' }}"
+            href="{{ route('manage-annual-reports.index') }}">
+            <svg class="nav-icon">
+                <use xlink:href="{{ asset('icons/coreui.svg#cil-description') }}"></use>
+            </svg>
+            Annual Report
+        </a>
+    </li>
+
+    {{-- ================= PICTURE GALLERY ================= --}}
+    {{-- ================= PICTURE GALLERY ================= --}}
+    <li class="nav-group {{ request()->routeIs('manage-gallery-categories.*', 'manage-galleries.*') ? 'show' : '' }}">
+        <a class="nav-link nav-group-toggle" href="#">
             <svg class="nav-icon">
                 <use xlink:href="{{ asset('icons/coreui.svg#cil-camera') }}"></use>
             </svg>
             Picture Management
         </a>
+
+        <ul class="nav-group-items">
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('manage-gallery-categories.*') ? 'active' : '' }}"
+                    href="{{ route('manage-gallery-categories.index') }}">
+                    Categories
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('manage-galleries.*') ? 'active' : '' }}"
+                    href="{{ route('manage-galleries.index') }}">
+                    Pictures
+                </a>
+            </li>
+        </ul>
     </li>
+
 
     {{-- ================= VIDEO GALLERY ================= --}}
     <li class="nav-group">
-        <a class="nav-link {{ request()->routeIs('videos.*') ? 'active' : '' }}" href="{{ route('videos.index') }}">
+        <a class="nav-link {{ request()->routeIs('manage-videos.*') ? 'active' : '' }}"
+            href="{{ route('manage-videos.index') }}">
             <svg class="nav-icon">
                 <use xlink:href="{{ asset('icons/coreui.svg#cil-video') }}"></use>
             </svg>
@@ -90,10 +154,13 @@
             Affiliation Management
         </a>
         <ul class="nav-group-items">
-            <li class="nav-item"><a class="nav-link" href="{{ route('recognizations.index') }}">Govt. Recognition</a>
+            <li class="nav-item"><a class="nav-link" href="{{ route('manage-recognizations.index') }}">Govt.
+                    Recognition</a>
             </li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('skill-dev.index') }}">Skill Development</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('manage-urdu-academy.index') }}">Urdu Academy</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('manage-skill-dev.index') }}">Skill Development</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('manage-urdu-academy.index') }}">Urdu Academy</a>
+            </li>
         </ul>
     </li>
 
@@ -106,31 +173,45 @@
             About Us Management
         </a>
         <ul class="nav-group-items">
-            <li class="nav-item"><a class="nav-link" href="{{ route('abouts.index') }}">About Us</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('chairmen.index') }}">Chairman Message</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('secretaries.index') }}">Secretary Message</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('missions.index') }}">Vision & Mission</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('certificates.index') }}">View Certificate</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('manage-abouts.index') }}">About Us</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('manage-chairmen.index') }}">Chairman Message</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('manage-secretaries.index') }}">Secretary
+                    Message</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('manage-missions.index') }}">Vision & Mission</a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('manage-certificates.index') }}">View
+                    Certificate</a></li>
         </ul>
     </li>
 
     {{-- ================= ADMISSION & COURSES ================= --}}
     <li class="nav-group">
-        <a class="nav-link nav-group-toggle" href="#">
+        <a class="nav-link {{ request()->routeIs('manage-applications.*') ? 'active' : '' }}"
+            href="{{  route('manage-applications.index')}}">
             <svg class="nav-icon">
                 <use xlink:href="{{ asset('icons/coreui.svg#cil-school') }}"></use>
             </svg>
-            Admission Management
+            Admission Form
         </a>
-        <ul class="nav-group-items">
-            <li class="nav-item"><a class="nav-link" href="{{ route('applications.index') }}">Application Form</a></li>
-            <!-- <li class="nav-item"><a class="nav-link" href="#">Our Courses</a></li> -->
-        </ul>
     </li>
+
+    {{-- ================= CAREER ================= --}}
+    <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('manage-careers.*') ? 'active' : '' }}"
+            href="{{ route('manage-careers.index') }}">
+            <svg class="nav-icon">
+                <use xlink:href="{{ asset('icons/coreui.svg#cil-briefcase') }}"></use>
+            </svg>
+            Career Applications
+        </a>
+    </li>
+
 
     {{-- ================= CONTACT US ================= --}}
     <li class="nav-group">
-        <a class="nav-link {{ request()->routeIs('contacts.*') ? 'active' : '' }}" href="{{ route('contacts.index') }}">
+        <a class="nav-link {{ request()->routeIs('manage-contacts.*') ? 'active' : '' }}"
+            href="{{ route('manage-contacts.index') }}">
             <svg class="nav-icon">
                 <use xlink:href="{{ asset('icons/coreui.svg#cil-phone') }}"></use>
             </svg>

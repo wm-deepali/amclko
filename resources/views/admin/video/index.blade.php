@@ -13,7 +13,7 @@
                     <option value="block">Blocked</option>
                 </select>
 
-                <a href="{{ route('videos.create') }}" class="btn btn-primary ms-auto">
+                <a href="{{ route('manage-videos.create') }}" class="btn btn-primary ms-auto">
                     + Add Video
                 </a>
             </div>
@@ -42,7 +42,7 @@
         let table = $('#videoTable').DataTable({
             serverSide: true,
             ajax: {
-                url: "{{ route('videos.index') }}",
+                url: "{{ route('manage-videos.index') }}",
                 data: function (d) {
                     d.status = $('#filter').val();
                 }
@@ -70,7 +70,7 @@
             $('.row_check:checked').each((i, e) => ids.push(e.value));
             if (!ids.length) return alert('Select rows');
 
-            $.post("{{ route('videos.bulk') }}", {
+            $.post("{{ route('manage-videos.bulk') }}", {
                 ids: ids,
                 action: action,
                 _token: "{{ csrf_token() }}"
@@ -82,7 +82,7 @@
         $(document).on('click', '.delete', function () {
             if (!confirm('Delete?')) return;
             $.ajax({
-                url: '/admin/videos/' + $(this).data('id'),
+                url: '/manage-videos/' + $(this).data('id'),
                 type: 'DELETE',
                 data: { _token: "{{ csrf_token() }}" },
                 success: () => table.ajax.reload()

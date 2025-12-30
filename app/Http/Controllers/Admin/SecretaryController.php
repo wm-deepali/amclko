@@ -32,7 +32,7 @@ class SecretaryController extends Controller
                 )
                 ->addColumn('action', fn ($r) =>
                     '
-                        <a href="'.route('secretaries.edit',$r->id).'" class="btn btn-sm btn-info">Edit</a>
+                        <a href="'.route('manage-secretaries.edit',$r->id).'" class="btn btn-sm btn-info">Edit</a>
                         <button class="btn btn-sm btn-danger delete" data-id="'.$r->id.'">Delete</button>
                     '
                 )
@@ -78,13 +78,15 @@ class SecretaryController extends Controller
     }
 
     /* ================= EDIT ================= */
-    public function edit(Secretary $secretary)
+    public function edit($id)
     {
+        $secretary = Secretary::findOrFail($id);
         return view('admin.secretary.edit', compact('secretary'));
     }
 
-    public function update(Request $request, Secretary $secretary)
+    public function update(Request $request, $id)
     {
+        $secretary = Secretary::findOrFail($id);
         $request->validate([
             'title'   => 'required',
             'content' => 'required',
@@ -119,8 +121,9 @@ class SecretaryController extends Controller
     }
 
     /* ================= DELETE ================= */
-    public function destroy(Secretary $secretary)
+    public function destroy($id)
     {
+        $secretary = Secretary::findOrFail($id);
         if ($secretary->image) {
             Storage::disk('public')->delete([
                 $secretary->image,

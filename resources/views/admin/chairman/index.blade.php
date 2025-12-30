@@ -14,7 +14,7 @@
                     <option value="block">Blocked</option>
                 </select>
 
-                <a href="{{ route('chairmen.create') }}" class="btn btn-primary ms-auto">
+                <a href="{{ route('manage-chairmen.create') }}" class="btn btn-primary ms-auto">
                     + Add Chairman Message
                 </a>
             </div>
@@ -49,7 +49,7 @@ let table = $('#chairmanTable').DataTable({
     processing:true,
     serverSide:true,
     ajax:{
-        url:"{{ route('chairmen.index') }}",
+        url:"{{ route('manage-chairmen.index') }}",
         data:d=>{
             d.status = $('#statusFilter').val();
         }
@@ -85,7 +85,7 @@ $('#bulkDelete').click(function(){
         confirmButtonText:'Delete'
     }).then(res=>{
         if(res.isConfirmed){
-            $.post("{{ route('chairmen.bulk') }}",{
+            $.post("{{ route('manage-chairmen.bulk') }}",{
                 _token:"{{ csrf_token() }}",
                 action:'delete',
                 ids:ids
@@ -105,7 +105,7 @@ $(document).on('click','.delete',function(){
     }).then(res=>{
         if(res.isConfirmed){
             $.ajax({
-                url:"{{ url('admin/chairmen') }}/"+id,
+                url:"{{ url('/manage-chairmen') }}/"+id,
                 type:'DELETE',
                 data:{_token:"{{ csrf_token() }}"},
                 success:()=>table.ajax.reload()

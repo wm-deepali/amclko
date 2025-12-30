@@ -44,7 +44,7 @@ class LogoController extends Controller
                 ->addColumn(
                     'action',
                     fn($row) =>
-                    '<a href="' . route('logos.edit', $row->id) . '" class="btn btn-sm btn-info">Edit</a>
+                    '<a href="' . route('manage-logos.edit', $row->id) . '" class="btn btn-sm btn-info">Edit</a>
                      <button class="btn btn-sm btn-danger delete" data-id="' . $row->id . '">Delete</button>'
                 )
                 ->rawColumns(['checkbox', 'image', 'status', 'action'])
@@ -83,13 +83,16 @@ class LogoController extends Controller
     /* ===============================
      |  EDIT
      =============================== */
-    public function edit(Logo $logo)
+    public function edit($id)
     {
+        $logo = Logo::findOrFail($id);
         return view('admin.logo.edit', compact('logo'));
     }
 
-    public function update(Request $request, Logo $logo)
+    public function update(Request $request, $id)
     {
+        $logo = Logo::findOrFail($id);
+        
         $request->validate([
             'title' => 'required',
             'status' => 'required|in:active,block',
@@ -120,8 +123,9 @@ class LogoController extends Controller
     /* ===============================
      |  DELETE
      =============================== */
-    public function destroy(Logo $logo)
+    public function destroy($id)
     {
+        $logo = Logo::findOrFail($id);
         Storage::disk('public')->delete([
             $logo->image,
             str_replace('logos/', 'logos/thumb/', $logo->image)

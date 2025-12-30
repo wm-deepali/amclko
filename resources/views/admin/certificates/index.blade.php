@@ -23,7 +23,7 @@
 
                     <button id="applyBulk" class="btn btn-secondary">Apply</button>
 
-                    <a href="{{ route('certificates.create') }}" class="btn btn-primary ms-auto">
+                    <a href="{{ route('manage-certificates.create') }}" class="btn btn-primary ms-auto">
                         + Add Image
                     </a>
                 </div>
@@ -52,7 +52,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route('certificates.index') }}",
+                url: "{{ route('manage-certificates.index') }}",
                 data: function (d) {
                     d.status = $('#statusFilter').val();
                 }
@@ -84,7 +84,7 @@
                 return;
             }
 
-            $.post("{{ route('certificates.bulk') }}", {
+            $.post("{{ route('manage-certificates.bulk') }}", {
                 _token: "{{ csrf_token() }}",
                 ids: ids,
                 action: action
@@ -102,7 +102,7 @@
             }).then(res => {
                 if (res.isConfirmed) {
                     $.ajax({
-                        url: "{{ url('admin/certificates') }}/" + id,
+                        url: "{{ url('manage-certificates') }}/" + id,
                         type: "DELETE",
                         data: { _token: "{{ csrf_token() }}" },
                         success: () => table.ajax.reload()

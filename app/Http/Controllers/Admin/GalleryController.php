@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Gallery;
+use App\Models\GalleryCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\DataTables;
@@ -15,37 +16,34 @@ class GalleryController extends Controller
     {
         if ($request->ajax()) {
 
-            $query = Gallery::latest();
+            $query = Gallery::with('category')->latest();
 
             if ($request->status && $request->status !== 'all') {
                 $query->where('status', $request->status);
             }
 
             return DataTables::of($query)
-                ->addColumn(
-                    'checkbox',
-                    fn($r) =>
-                    '<input type="checkbox" class="row_check" value="' . $r->id . '">'
+                ->addColumn('checkbox', fn ($r) =>
+                    '<input type="checkbox" class="row_check" value="'.$r->id.'">'
                 )
-                ->addColumn(
-                    'image',
-                    fn($r) =>
-                    '<img src="' . asset('storage/' . $r->image) . '" height="60">'
+                ->addColumn('image', fn ($r) =>
+                    '<img src="'.asset('storage/'.$r->image).'" height="60">'
                 )
-                ->addColumn(
-                    'status',
-                    fn($r) =>
+                ->addColumn('category', fn ($r) =>
+                    $r->category
+                        ? '<span class="badge bg-info">'.$r->category->title.'</span>'
+                        : '<span class="badge bg-secondary">Uncategorized</span>'
+                )
+                ->addColumn('status', fn ($r) =>
                     $r->status === 'active'
-                    ? '<span class="badge bg-success">Active</span>'
-                    : '<span class="badge bg-danger">Blocked</span>'
+                        ? '<span class="badge bg-success">Active</span>'
+                        : '<span class="badge bg-danger">Blocked</span>'
                 )
-                ->addColumn(
-                    'action',
-                    fn($r) =>
-                    '<a href="' . route('galleries.edit', $r->id) . '" class="btn btn-sm btn-info">Edit</a>
-                     <button class="btn btn-sm btn-danger delete" data-id="' . $r->id . '">Delete</button>'
+                ->addColumn('action', fn ($r) =>
+                    '<a href="'.route('manage-galleries.edit',$r->id).'" class="btn btn-sm btn-info">Edit</a>
+                     <button class="btn btn-sm btn-danger delete" data-id="'.$r->id.'">Delete</button>'
                 )
-                ->rawColumns(['checkbox', 'image', 'status', 'action'])
+                ->rawColumns(['checkbox','image','category','status','action'])
                 ->make(true);
         }
 
@@ -55,13 +53,15 @@ class GalleryController extends Controller
     /* ================= CREATE ================= */
     public function create()
     {
-        return view('admin.gallery.create');
+        $categories = GalleryCategory::where('status','active')->get();
+        return view('admin.gallery.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'image' => 'required|image|max:2048'
+            'image' => 'required|image|max:2048',
+            'category_id' => 'required|exists:gallery_categories,id'
         ]);
 
         $imagePath = $this->saveImageWithThumb(
@@ -73,6 +73,7 @@ class GalleryController extends Controller
 
         Gallery::create([
             'image' => $imagePath,
+            'category_id' => $request->category_id,
             'status' => 'active'
         ]);
 
@@ -80,30 +81,34 @@ class GalleryController extends Controller
     }
 
     /* ================= EDIT ================= */
-    public function edit(Gallery $gallery)
+    public function edit($id)
     {
-        return view('admin.gallery.edit', compact('gallery'));
+        $gallery = Gallery::findOrFail($id);
+        $categories = GalleryCategory::where('status','active')->get();
+
+        return view('admin.gallery.edit', compact('gallery','categories'));
     }
 
-    public function update(Request $request, Gallery $gallery)
+    public function update(Request $request, $id)
     {
+        $gallery = Gallery::findOrFail($id);
+
         $request->validate([
             'image' => 'nullable|image|max:2048',
-            'status' => 'required|in:active,block'
+            'status' => 'required|in:active,block',
+            'category_id' => 'required|exists:gallery_categories,id'
         ]);
 
-        // update status (OLD PHP equivalent)
         $gallery->status = $request->status;
+        $gallery->category_id = $request->category_id;
 
         if ($request->hasFile('image')) {
 
-            // delete old image + thumb (same as unlink)
             Storage::disk('public')->delete([
                 $gallery->image,
                 str_replace('gallery/', 'gallery/thumb/', $gallery->image)
             ]);
 
-            // save new image + thumb
             $gallery->image = $this->saveImageWithThumb(
                 $request->file('image'),
                 'gallery',
@@ -117,10 +122,11 @@ class GalleryController extends Controller
         return response()->json(['success' => true]);
     }
 
-
     /* ================= DELETE ================= */
-    public function destroy(Gallery $gallery)
+    public function destroy($id)
     {
+        $gallery = Gallery::findOrFail($id);
+
         Storage::disk('public')->delete([
             $gallery->image,
             str_replace('gallery/', 'gallery/thumb/', $gallery->image)
@@ -144,7 +150,7 @@ class GalleryController extends Controller
             });
         }
 
-        if (in_array($request->action, ['active', 'block'])) {
+        if (in_array($request->action, ['active','block'])) {
             Gallery::whereIn('id', $request->ids)
                 ->update(['status' => $request->action]);
         }
@@ -155,30 +161,22 @@ class GalleryController extends Controller
     /* ================= IMAGE HANDLER ================= */
     private function saveImageWithThumb($file, $dir, $w, $h)
     {
-        $ext = $file->getClientOriginalExtension();
-        $name = 'gallery_' . time() . '.' . $ext;
+        $name = 'gallery_'.time().'.'.$file->getClientOriginalExtension();
 
-        // original
         $file->storeAs($dir, $name, 'public');
 
-        // thumb
-        $src = imagecreatefromstring(file_get_contents($file));
+        $src   = imagecreatefromstring(file_get_contents($file));
         $thumb = imagecreatetruecolor($w, $h);
 
         imagecopyresampled(
-            $thumb,
-            $src,
-            0,
-            0,
-            0,
-            0,
-            $w,
-            $h,
+            $thumb, $src,
+            0,0,0,0,
+            $w,$h,
             imagesx($src),
             imagesy($src)
         );
 
-        Storage::disk('public')->makeDirectory($dir . '/thumb');
+        Storage::disk('public')->makeDirectory($dir.'/thumb');
 
         imagejpeg(
             $thumb,

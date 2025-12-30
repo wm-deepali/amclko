@@ -22,21 +22,27 @@ class ChairmanController extends Controller
             }
 
             return DataTables::of($query)
-                ->addColumn('checkbox', fn($r) =>
-                    '<input type="checkbox" class="row_check" value="'.$r->id.'">'
+                ->addColumn(
+                    'checkbox',
+                    fn($r) =>
+                    '<input type="checkbox" class="row_check" value="' . $r->id . '">'
                 )
-                ->addColumn('status', fn($r) =>
+                ->addColumn(
+                    'status',
+                    fn($r) =>
                     $r->status === 'active'
-                        ? '<span class="badge bg-success">Active</span>'
-                        : '<span class="badge bg-danger">Blocked</span>'
+                    ? '<span class="badge bg-success">Active</span>'
+                    : '<span class="badge bg-danger">Blocked</span>'
                 )
-                ->addColumn('action', fn($r) =>
+                ->addColumn(
+                    'action',
+                    fn($r) =>
                     '
-                    <a href="'.route('chairmen.edit',$r->id).'" class="btn btn-sm btn-info">Edit</a>
-                    <button class="btn btn-sm btn-danger delete" data-id="'.$r->id.'">Delete</button>
+                    <a href="' . route('manage-chairmen.edit', $r->id) . '" class="btn btn-sm btn-info">Edit</a>
+                    <button class="btn btn-sm btn-danger delete" data-id="' . $r->id . '">Delete</button>
                     '
                 )
-                ->rawColumns(['checkbox','status','action'])
+                ->rawColumns(['checkbox', 'status', 'action'])
                 ->make(true);
         }
 
@@ -52,12 +58,12 @@ class ChairmanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'   => 'required',
+            'title' => 'required',
             'content' => 'required',
-            'image'   => 'nullable|image|max:2048'
+            'image' => 'nullable|image|max:2048'
         ]);
 
-        $data = $request->only('title','content');
+        $data = $request->only('title', 'content');
         $data['status'] = 'active';
 
         if ($request->hasFile('image')) {
@@ -71,25 +77,27 @@ class ChairmanController extends Controller
 
         Chairman::create($data);
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= EDIT ================= */
-    public function edit(Chairman $chairman)
+    public function edit($id)
     {
+        $chairman = Chairman::findOrFail($id);
         return view('admin.chairman.edit', compact('chairman'));
     }
 
-    public function update(Request $request, Chairman $chairman)
+    public function update(Request $request, $id)
     {
+        $chairman = Chairman::findOrFail($id);
         $request->validate([
-            'title'   => 'required',
+            'title' => 'required',
             'content' => 'required',
-            'status'  => 'required|in:active,block',
-            'image'   => 'nullable|image|max:2048'
+            'status' => 'required|in:active,block',
+            'image' => 'nullable|image|max:2048'
         ]);
 
-        $chairman->fill($request->only('title','content','status'));
+        $chairman->fill($request->only('title', 'content', 'status'));
 
         if ($request->hasFile('image')) {
             if ($chairman->image) {
@@ -109,12 +117,13 @@ class ChairmanController extends Controller
 
         $chairman->save();
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= DELETE ================= */
-    public function destroy(Chairman $chairman)
+    public function destroy($id)
     {
+        $chairman = Chairman::findOrFail($id);
         if ($chairman->image) {
             Storage::disk('public')->delete([
                 $chairman->image,
@@ -124,14 +133,14 @@ class ChairmanController extends Controller
 
         $chairman->delete();
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= BULK ================= */
     public function bulk(Request $request)
     {
         if ($request->action === 'delete') {
-            Chairman::whereIn('id',$request->ids)->get()->each(function ($c) {
+            Chairman::whereIn('id', $request->ids)->get()->each(function ($c) {
                 if ($c->image) {
                     Storage::disk('public')->delete([
                         $c->image,
@@ -142,32 +151,40 @@ class ChairmanController extends Controller
             });
         }
 
-        if (in_array($request->action,['active','block'])) {
-            Chairman::whereIn('id',$request->ids)
-                ->update(['status'=>$request->action]);
+        if (in_array($request->action, ['active', 'block'])) {
+            Chairman::whereIn('id', $request->ids)
+                ->update(['status' => $request->action]);
         }
 
-        return response()->json(['success'=>true]);
+        return response()->json(['success' => true]);
     }
 
     /* ================= IMAGE HANDLER ================= */
-    private function saveImage($file,$dir,$w,$h)
+    private function saveImage($file, $dir, $w, $h)
     {
-        $name = 'affiliation_'.time().'.'.$file->getClientOriginalExtension();
+        $name = 'affiliation_' . time() . '.' . $file->getClientOriginalExtension();
 
         // original
-        $file->storeAs($dir,$name,'public');
+        $file->storeAs($dir, $name, 'public');
 
         // thumb
-        $src   = imagecreatefromstring(file_get_contents($file));
-        $thumb = imagecreatetruecolor($w,$h);
+        $src = imagecreatefromstring(file_get_contents($file));
+        $thumb = imagecreatetruecolor($w, $h);
 
         imagecopyresampled(
-            $thumb,$src,0,0,0,0,$w,$h,
-            imagesx($src),imagesy($src)
+            $thumb,
+            $src,
+            0,
+            0,
+            0,
+            0,
+            $w,
+            $h,
+            imagesx($src),
+            imagesy($src)
         );
 
-        Storage::disk('public')->makeDirectory($dir.'/thumb');
+        Storage::disk('public')->makeDirectory($dir . '/thumb');
 
         imagejpeg(
             $thumb,

@@ -53,7 +53,7 @@
 
                     <div class="text-end">
                         <button type="submit" class="btn btn-primary">Update</button>
-                        <a href="{{ route('backgrounds.index') }}" class="btn btn-secondary">Cancel</a>
+                        <a href="{{ route('manage-backgrounds.index') }}" class="btn btn-secondary">Cancel</a>
                     </div>
                 </form>
 
@@ -74,14 +74,14 @@
             formData.set('content', CKEDITOR.instances.editor.getData());
 
             $.ajax({
-                url: "{{ route('backgrounds.update', $background->id) }}",
+                url: "{{ route('manage-backgrounds.update', $background->id) }}",
                 type: "POST",
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function () {
                     Swal.fire('Success', 'Background updated successfully', 'success')
-                        .then(() => window.location.href = "{{ route('backgrounds.index') }}");
+                        .then(() => window.location.href = "{{ route('manage-backgrounds.index') }}");
                 },
                 error: function (xhr) {
                     let msg = '';

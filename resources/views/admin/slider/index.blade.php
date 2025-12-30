@@ -14,7 +14,7 @@
                         <option value="block">Blocked</option>
                     </select>
 
-                    <a href="{{ route('sliders.create') }}" class="btn btn-primary ms-auto">
+                    <a href="{{ route('manage-sliders.create') }}" class="btn btn-primary ms-auto">
                         + Add Slider
                     </a>
                 </div>
@@ -46,7 +46,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route('sliders.index') }}",
+                url: "{{ route('manage-sliders.index') }}",
                 type: "GET",
                 data: function (d) {
                     d.status = $('#filter').val();
@@ -80,7 +80,7 @@
                 return;
             }
 
-            $.post("{{ route('sliders.bulk') }}", {
+            $.post("{{ route('manage-sliders.bulk') }}", {
                 ids: ids,
                 action: 'delete',
                 _token: "{{ csrf_token() }}"
@@ -91,7 +91,7 @@
             if (!confirm('Are you sure?')) return;
 
             $.ajax({
-                url: '/admin/sliders/' + $(this).data('id'),
+                url: '/manage-sliders/' + $(this).data('id'),
                 type: 'DELETE',
                 data: { _token: "{{ csrf_token() }}" },
                 success: () => table.ajax.reload()

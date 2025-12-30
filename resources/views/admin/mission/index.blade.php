@@ -14,7 +14,7 @@
                         <option value="block">Blocked</option>
                     </select>
 
-                    <a href="{{ route('missions.create') }}" class="btn btn-primary ms-auto">
+                    <a href="{{ route('manage-missions.create') }}" class="btn btn-primary ms-auto">
                         + Add Mission
                     </a>
                 </div>
@@ -53,7 +53,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route('missions.index') }}",
+                url: "{{ route('manage-missions.index') }}",
                 data: function (d) {
                     d.status = $('#statusFilter').val();
                 }
@@ -90,7 +90,7 @@
                 showCancelButton: true
             }).then(res => {
                 if (res.isConfirmed) {
-                    $.post("{{ route('missions.bulk') }}", {
+                    $.post("{{ route('manage-missions.bulk') }}", {
                         _token: "{{ csrf_token() }}",
                         ids: ids,
                         action: action
@@ -109,7 +109,7 @@
             }).then(res => {
                 if (res.isConfirmed) {
                     $.ajax({
-                        url: "{{ url('missions') }}/" + id,
+                        url: "{{ url('manage-missions') }}/" + id,
                         type: "DELETE",
                         data: { _token: "{{ csrf_token() }}" },
                         success: () => table.ajax.reload()

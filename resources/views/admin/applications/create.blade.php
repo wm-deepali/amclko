@@ -25,7 +25,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Add</button>
-                    <a href="{{ route('applications.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-applications.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -42,14 +42,14 @@ $('#createForm').submit(function(e){
     let fd = new FormData(this);
 
     $.ajax({
-        url:"{{ route('applications.store') }}",
+        url:"{{ route('manage-applications.store') }}",
         type:"POST",
         data:fd,
         processData:false,
         contentType:false,
         success:()=>{
             Swal.fire('Success','Application added','success')
-                .then(()=>location.href="{{ route('applications.index') }}");
+                .then(()=>location.href="{{ route('manage-applications.index') }}");
         }
     });
 });

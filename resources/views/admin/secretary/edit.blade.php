@@ -53,7 +53,7 @@
 
                 <div class="text-end">
                     <button class="btn btn-primary">Update</button>
-                    <a href="{{ route('secretaries.index') }}" class="btn btn-secondary">Cancel</a>
+                    <a href="{{ route('manage-secretaries.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
 
@@ -74,14 +74,14 @@ $('#secretaryEditForm').submit(function(e){
     fd.set('content', CKEDITOR.instances.editor.getData());
 
     $.ajax({
-        url:"{{ route('secretaries.update',$secretary->id) }}",
+        url:"{{ route('manage-secretaries.update',$secretary->id) }}",
         type:"POST",
         data:fd,
         processData:false,
         contentType:false,
         success:()=>{
             Swal.fire('Success','Updated successfully','success')
-            .then(()=>location.href="{{ route('secretaries.index') }}");
+            .then(()=>location.href="{{ route('manage-secretaries.index') }}");
         }
     });
 });

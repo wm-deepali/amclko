@@ -45,7 +45,7 @@ class SliderController extends Controller
                 })
                 ->addColumn('action', function ($r) {
                     return '
-                        <a href="' . route('sliders.edit', $r->id) . '" class="btn btn-sm btn-info">Edit</a>
+                        <a href="' . route('manage-sliders.edit', $r->id) . '" class="btn btn-sm btn-info">Edit</a>
                         <button class="btn btn-sm btn-danger delete" data-id="' . $r->id . '">Delete</button>
                     ';
                 })
@@ -89,13 +89,15 @@ class SliderController extends Controller
     }
 
     /* ================= EDIT ================= */
-    public function edit(Slider $slider)
+    public function edit($id)
     {
+        $slider = Slider::findOrFail($id);
         return view('admin.slider.edit', compact('slider'));
     }
 
-    public function update(Request $request, Slider $slider)
+    public function update(Request $request, $id)
     {
+        $slider = Slider::findOrFail($id);
         $request->validate([
             'title' => 'required',
             'status' => 'required|in:active,block',
@@ -130,8 +132,9 @@ class SliderController extends Controller
 
 
     /* ================= DELETE ================= */
-    public function destroy(Slider $slider)
+    public function destroy($id)
     {
+        $slider = Slider::findOrFail($id);
         if ($slider->image) {
             Storage::disk('public')->delete([
                 $slider->image,
