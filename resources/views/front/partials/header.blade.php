@@ -14,7 +14,6 @@
   <link rel="stylesheet" href="{{ asset('owl-carousel/owl.carousel.css') }}">
   <link rel="stylesheet" href="{{ asset('owl-carousel/owl.theme.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/lightbox.min.css') }}">
-
   <script src="https://www.youtube.com/player_api"></script>
 
   {{-- SAME INLINE CSS – NO CHANGE --}}
@@ -295,7 +294,32 @@
         width: 40% !important;
       }
     }
-  </style>
+
+    .modal-content {
+  border-radius: 6px;
+}
+
+.form-control {
+  height: 42px;
+  border-radius: 4px;
+}
+
+textarea.form-control {
+  resize: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg,#ff6b6b,#ee5a52);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg,#ff5252,#d32f2f);
+}
+
+
+</style>
+
 </head>
 
 <body>
@@ -321,15 +345,20 @@
               <i class="fa fa-briefcase"></i> Career
             </a>
 
-            <a href="#" class="header-btn header-btn-primary" data-toggle="modal" data-target="#myModal">
-              <i class="fa fa-envelope"></i> Send Enquiry
-            </a>
+          <a class="header-btn header-btn-primary"
+   data-toggle="modal"
+   data-target="#offcanvasExample">
+  <i class="fa fa-envelope"></i> Send Enquiry
+</a>
+
+
           </div>
         </div>
       </div>
     </div>
   </div>
 
+  
   {{-- NAVBAR – SAME STRUCTURE --}}
   <div class="amc-navbar-container">
     <nav class="navbar navbar-default amc-navbar-main">
@@ -422,6 +451,120 @@
     </nav>
   </div>
 
+<!-- Send Enquiry Modal -->
+<div class="modal fade" id="offcanvasExample" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-md" role="document">
+    <div class="modal-content">
+
+      <!-- HEADER -->
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title text-center" style="font-weight:600;">
+          Send Enquiry
+        </h4>
+      </div>
+
+      <!-- BODY -->
+      <div class="modal-body">
+
+      @if(session('success'))
+    <div class="alert alert-success text-center">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul style="margin:0;padding-left:18px;">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+
+       <form method="POST" action="{{ route('enquiry.submit') }}" id="callfrm">
+    @csrf
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <input type="text" name="full_name" class="form-control"
+              placeholder="Your Full Name" required>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <input type="email" name="email" class="form-control"
+              placeholder="Email Address" required>
+          </div>
+
+          <!-- Service -->
+          <!-- <div class="form-group">
+            <div class="custom-select-wrapper">
+              <select name="service_id" class="form-control" required>
+                <option value="">Select Service</option>
+              </select>
+              <i class="fa fa-chevron-down select-icon"></i>
+            </div>
+          </div> -->
+
+          <!-- Mobile -->
+          <div class="form-group" style="display:flex;gap:10px;">
+            @php
+              $commonCodes = [
+                ['name'=>'IN','code'=>'91'],
+                ['name'=>'US','code'=>'1'],
+                ['name'=>'UK','code'=>'44'],
+              ];
+            @endphp
+
+            <select name="country_code" class="form-control" style="max-width:110px;">
+              @foreach($commonCodes as $c)
+                <option value="{{ $c['code'] }}" {{ $c['code']=='91'?'selected':'' }}>
+                  +{{ $c['code'] }}
+                </option>
+              @endforeach
+            </select>
+
+            <input type="tel" name="mobile" class="form-control"
+              placeholder="Mobile Number" required>
+          </div>
+
+          <!-- Location -->
+          <div class="form-group">
+            <input type="text" name="location" class="form-control"
+              placeholder="Location" required>
+          </div>
+
+          <!-- Message -->
+          <div class="form-group">
+            <textarea name="details" rows="3" class="form-control"
+              placeholder="Your Message" required></textarea>
+          </div>
+
+          <!-- Recaptcha -->
+          <div class="form-group text-center">
+            <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+          </div>
+
+          <!-- Submit -->
+          <div class="form-group">
+            <button type="submit"
+              class="btn btn-primary btn-block"
+              style="font-weight:600;">
+              Submit Enquiry
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
   <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
   <script src="{{ asset('assets/js/wow.min.js') }}"></script>
@@ -432,3 +575,11 @@
       $('.simple-marquee-container').SimpleMarquee();
     });
   </script>
+
+@if ($errors->any())
+<script>
+  $(function () {
+    $('#offcanvasExample').modal('show');
+  });
+</script>
+@endif

@@ -84,15 +84,16 @@
         </a>
     </li>
 
-    <li class="nav-item">
-        <a class="nav-link {{ request()->routeIs('manage-faqs.*') ? 'active' : '' }}"
-            href="{{ route('manage-faqs.index') }}">
-            <svg class="nav-icon">
-                <use xlink:href="{{ asset('icons/coreui.svg#cil-question-mark') }}"></use>
-            </svg>
-            FAQ Management
-        </a>
-    </li>
+  <li class="nav-item">
+    <a class="nav-link {{ request()->routeIs('manage-faqs.*') ? 'active' : '' }}"
+        href="{{ route('manage-faqs.index') }}">
+        <svg class="nav-icon">
+            <use xlink:href="{{ asset('icons/coreui.svg#cil-help') }}"></use>
+        </svg>
+        FAQ Management
+    </a>
+</li>
+
 
 
     {{-- ================= ANNUAL REPORT ================= --}}
@@ -218,6 +219,18 @@
             Contact Us Management
         </a>
     </li>
+
+    {{-- ================= ENQUIRIES ================= --}}
+<li class="nav-item">
+    <a class="nav-link {{ request()->routeIs('manage-enquiries.*') ? 'active' : '' }}"
+        href="{{ route('manage-enquiries.index') }}">
+        <svg class="nav-icon">
+            <use xlink:href="{{ asset('icons/coreui.svg#cil-envelope-open') }}"></use>
+        </svg>
+        Enquiry Management
+    </a>
+</li>
+
 
     {{-- ================= WEB SETTINGS ================= --}}
     <li class="nav-group">

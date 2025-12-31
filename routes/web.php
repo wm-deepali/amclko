@@ -1,16 +1,23 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\Admin\FaqController;
+use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\LogoController;
+use App\Http\Controllers\Admin\AboutController;
+use App\Http\Controllers\Admin\VideoController;
+use App\Http\Controllers\Admin\CareerController;
 use App\Http\Controllers\Admin\SliderController;
-use App\Http\Controllers\Admin\BackgroundController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\GalleryController;
-use App\Http\Controllers\Admin\VideoController;
+use App\Http\Controllers\Admin\BackgroundController;
 use App\Http\Controllers\Admin\RecognizationController;
 use App\Http\Controllers\Admin\SkillDevController;
 use App\Http\Controllers\Admin\UrduAcademyController;
-use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\ChairmanController;
 use App\Http\Controllers\Admin\SecretaryController;
 use App\Http\Controllers\Admin\MissionController;
@@ -21,13 +28,7 @@ use App\Http\Controllers\Admin\ChangePasswordController;
 use App\Http\Controllers\Admin\ProgramController;
 use App\Http\Controllers\Admin\AnnualReportController;
 use App\Http\Controllers\Admin\GalleryCategoryController;
-use App\Http\Controllers\Admin\CareerController;
-use App\Http\Controllers\Admin\BlogController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\FaqController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\EnquiryController;
 
 
 /*
@@ -70,11 +71,13 @@ Route::post('/career-submit', [FrontController::class, 'storeCareer'])->name('ca
 Route::get('/photo-gallery', [FrontController::class, 'gallery'])->name('photo.gallery');
 Route::get('/background', [FrontController::class, 'background'])->name('background');
 
-Route::get('/blogs', [FrontController::class,'blogIndex'])->name('blogs');
-Route::get('/blog/{slug}', [FrontController::class,'blogDetail'])->name('blog.detail');
+Route::get('/blogs', [FrontController::class, 'blogIndex'])->name('blogs');
+Route::get('/blog/{slug}', [FrontController::class, 'blogDetail'])->name('blog.detail');
 
-Route::get('/faqs', [FrontController::class,'faqIndex'])->name('faqs');
+Route::get('/faqs', [FrontController::class, 'faqIndex'])->name('faqs');
 
+Route::post('/send-enquiry', [FrontController::class, 'storeEnquiry'])
+    ->name('enquiry.submit');
 
 //course detail page
 Route::get('/computer-course', function () {
@@ -166,6 +169,8 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
 
         Route::resource('manage-contacts', ContactController::class);
         Route::post('manage-contacts/bulk', [ContactController::class, 'bulk'])->name('manage-contacts.bulk');
+
+        Route::resource('manage-enquiries', EnquiryController::class);
 
         Route::get('change-password', [ChangePasswordController::class, 'edit'])
             ->name('admin.password.edit');

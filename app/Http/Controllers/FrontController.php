@@ -9,6 +9,7 @@ use App\Models\Career;
 use App\Models\Chairman;
 use App\Models\Contact;
 use App\Models\Course;
+use App\Models\Enquiry;
 use App\Models\Faq;
 use App\Models\GalleryCategory;
 use App\Models\Mission;
@@ -343,6 +344,46 @@ class FrontController extends Controller
             ->get();
 
         return view('front.faqs', compact('faqs'));
+    }
+
+    public function storeEnquiry(Request $request)
+    {
+        // ✅ Validate reCAPTCHA
+        $response = Http::asForm()->post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            [
+                'secret' => env('RECAPTCHA_SECRET_KEY'),
+                'response' => $request->input('g-recaptcha-response'),
+                'remoteip' => $request->ip(),
+            ]
+        )->json();
+
+        if (!($response['success'] ?? false)) {
+            return back()
+                ->withInput()
+                ->with('error', 'Please verify that you are not a robot.');
+        }
+
+        $request->validate([
+            'full_name' => 'required|string|max:100',
+            'email' => 'required|email|max:150',
+            'country_code' => 'required|string|max:5',
+            'mobile' => 'required|string|min:7|max:20',
+            'location' => 'required|string|max:100',
+            'details' => 'required|string|max:500',
+        ]);
+
+        Enquiry::create([
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'country_code' => $request->country_code,
+            'mobile' => $request->mobile,
+            'location' => $request->location,
+            'details' => $request->details,
+            'ip_address' => $request->ip(),
+        ]);
+
+        return back()->with('success', 'Thank you! Your enquiry has been submitted successfully.');
     }
 
 }
