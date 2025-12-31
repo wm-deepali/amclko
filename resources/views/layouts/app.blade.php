@@ -8,9 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>
         @if (trim($__env->yieldContent('title')))
-            @yield('title') | {{ config('app.name', 'Adhyayanam') }}
+            @yield('title') | {{ config('app.name', 'AMC') }}
         @else
-            {{ config('app.name', 'Adhyayanam') }}
+            {{ config('app.name', 'AMC') }}
         @endif
     </title>
     <meta name="theme-color" content="#ffffff">
@@ -69,7 +69,7 @@
                 <img src="{{ asset('storage/' . $siteLogo->image) }}" alt="Site Logo"
                     style="width:250px; height:45px; background:#fff; padding:5px;">
             @else
-                <span class="fw-bold">Adhyayanam</span>
+                <span class="fw-bold">AMC</span>
             @endif
         </div>
         @include('layouts.navigation')

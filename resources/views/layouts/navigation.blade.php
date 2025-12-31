@@ -33,7 +33,7 @@
         <a class="nav-link {{ request()->routeIs('manage-sliders.*') ? 'active' : '' }}"
             href="{{ route('manage-sliders.index') }}">
             <svg class="nav-icon">
-                <use xlink:href="{{ asset('icons/coreui.svg#cil-image') }}"></use>
+                <use xlink:href="{{ asset('icons/coreui.svg#cil-layers') }}"></use>
             </svg>
             Slider Management
         </a>
@@ -68,7 +68,7 @@
         <a class="nav-link {{ request()->routeIs('manage-programs.*') ? 'active' : '' }}"
             href="{{ route('manage-programs.index') }}">
             <svg class="nav-icon">
-                <use xlink:href="{{ asset('icons/coreui.svg#cil-notes') }}"></use>
+                <use xlink:href="{{ asset('icons/coreui.svg#cil-list') }}"></use>
             </svg>
             Programs Management
         </a>
@@ -78,7 +78,7 @@
         <a class="nav-link {{ request()->routeIs('manage-blogs.*') ? 'active' : '' }}"
             href="{{ route('manage-blogs.index') }}">
             <svg class="nav-icon">
-                <use xlink:href="{{ asset('icons/coreui.svg#cil-description') }}"></use>
+                <use xlink:href="{{ asset('icons/coreui.svg#cil-notes') }}"></use>
             </svg>
             Blog Management
         </a>
@@ -88,7 +88,7 @@
     <a class="nav-link {{ request()->routeIs('manage-faqs.*') ? 'active' : '' }}"
         href="{{ route('manage-faqs.index') }}">
         <svg class="nav-icon">
-            <use xlink:href="{{ asset('icons/coreui.svg#cil-help') }}"></use>
+            <use xlink:href="{{ asset('icons/coreui.svg#cil-info') }}"></use>
         </svg>
         FAQ Management
     </a>
@@ -101,7 +101,7 @@
         <a class="nav-link {{ request()->routeIs('manage-annual-reports.*') ? 'active' : '' }}"
             href="{{ route('manage-annual-reports.index') }}">
             <svg class="nav-icon">
-                <use xlink:href="{{ asset('icons/coreui.svg#cil-description') }}"></use>
+                <use xlink:href="{{ asset('icons/coreui.svg#cil-file') }}"></use>
             </svg>
             Annual Report
         </a>

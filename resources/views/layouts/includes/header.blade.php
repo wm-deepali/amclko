@@ -11,7 +11,7 @@
                 <img src="{{ asset('storage/' . $siteLogo->image) }}" alt="Site Logo"
                     style="width:250px; height:45px; object-fit:contain;">
             @else
-                <span class="fw-bold">Adhyayanam</span>
+                <span class="fw-bold">AMC</span>
             @endif
         </a>
 
